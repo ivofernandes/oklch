@@ -1,6 +1,18 @@
 import 'dart:math';
+import 'dart:ui';
 
 class RGBtoOKLCH {
+
+  static List<double> convertColorToOKLCH(Color color) {
+    // Extract RGB values
+    int r = color.red;
+    int g = color.green;
+    int b = color.blue;
+
+    // Convert RGB to OKLCH
+    return convert(r, g, b);
+  }
+
   // Function to convert RGB to OKLCH
   static List<double> convert(int r, int g, int b) {
     // Step 1: Convert RGB to XYZ
