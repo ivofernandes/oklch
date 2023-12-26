@@ -23,33 +23,29 @@ class ColorPickerDemo extends StatefulWidget {
 }
 
 class _ColorPickerDemoState extends State<ColorPickerDemo> {
-  Color _selectedColor = Colors.blue;
+  static Color startColor = Colors.blue;
+  Color _selectedColor = startColor;
   TextEditingController rgbController = TextEditingController();
   TextEditingController oklchController = TextEditingController();
-  TextEditingController hexController = TextEditingController(); // Hex controller
+  TextEditingController hexController = TextEditingController();
 
-  List<double> _selectedOKLCH = [0,0,0];
+  OKLCHColor _oKLCHColor = OKLCHColor.fromColor(startColor);
 
   @override
   void initState() {
     super.initState();
-    _selectedOKLCH = RGBtoOKLCH.convertColorToOKLCH(_selectedColor);
     _updateColorControllers(_selectedColor);
   }
 
-  String colorToHex(Color color) {
-    return '#${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}';
-  }
-
   void _updateColorControllers(Color color) {
-    _selectedOKLCH = OKLCHColor.convertColorToOKLCH(color);
+    _oKLCHColor = OKLCHColor.fromColor(color);
     rgbController.text = 'RGB(${color.red}, ${color.green}, ${color.blue})';
-    oklchController.text = 'OKLCH(${_selectedOKLCH[0].toStringAsFixed(2)}, ${_selectedOKLCH[1].toStringAsFixed(2)}, ${_selectedOKLCH[2].toStringAsFixed(2)})';
-    hexController.text = colorToHex(color); // Update for hex value
+    oklchController.text = _oKLCHColor.textDescription;
+    hexController.text = _oKLCHColor.rgbHex;
   }
 
   String _generateOKLCHUrl() {
-    return 'https://oklch.com/#${_selectedOKLCH[0].toStringAsFixed(2)},${_selectedOKLCH[1].toStringAsFixed(2)},${_selectedOKLCH[2].toStringAsFixed(2)},100';
+    return 'https://oklch.com/#${_oKLCHColor.lightness.toStringAsFixed(2)},${_oKLCHColor.chroma.toStringAsFixed(2)},${_oKLCHColor.hue.toStringAsFixed(2)},100';
   }
 
   @override
@@ -61,7 +57,9 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
           IconButton(
             icon: Icon(Icons.open_in_new),
             onPressed: () {
-              launchUrl(Uri.parse(_generateOKLCHUrl()));
+              final String url = _generateOKLCHUrl();
+              debugPrint(url);
+              launchUrl(Uri.parse(url));
             },
           ),
         ],
@@ -72,14 +70,14 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
             Container(
               height: 200,
               color: _selectedColor,
-              child: Center(
+              child: const Center(
                 child: Text(
                   'Background Color',
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
               ),
             ),
-            OKLCHColorPicker(
+            OKLCHColorPickerWidget(
               color: _selectedColor,
               onColorChanged: (color) {
                 setState(() {

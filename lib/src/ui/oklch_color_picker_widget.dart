@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'oklch_color.dart'; // Replace with your actual OKLCHColor class
+import '../oklch_color.dart'; // Replace with your actual OKLCHColor class
 
-class OKLCHColorPicker extends StatefulWidget {
+class OKLCHColorPickerWidget extends StatefulWidget {
   final Color color;
   final ValueChanged<Color> onColorChanged;
 
-  const OKLCHColorPicker({
+  const OKLCHColorPickerWidget({
     super.key,
     required this.color,
     required this.onColorChanged,
   });
 
   @override
-  _OKLCHColorPickerState createState() => _OKLCHColorPickerState();
+  _OKLCHColorPickerWidgetState createState() => _OKLCHColorPickerWidgetState();
 }
 
-class _OKLCHColorPickerState extends State<OKLCHColorPicker> {
+class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   late double lightness;
   late double chroma;
   late double hue;
@@ -24,7 +24,7 @@ class _OKLCHColorPickerState extends State<OKLCHColorPicker> {
   @override
   void initState() {
     super.initState();
-    var oklch = OKLCHColor.convertColorToOKLCH(widget.color); // Convert initial color to OKLCH
+    var oklch = OKLCHColor.fromColor(widget.color).array; // Convert initial color to OKLCH
     lightness = oklch[0];
     chroma = oklch[1];
     hue = oklch[2];
@@ -48,7 +48,7 @@ class _OKLCHColorPickerState extends State<OKLCHColorPicker> {
         }, isHue: true),
         Container(
           height: 50,
-          color: OKLCHColor.fromOKLCH(lightness, chroma, hue),
+          color: OKLCHColor.fromOKLCH(lightness, chroma, hue).color,
         ),
       ],
     );
@@ -78,7 +78,7 @@ class _OKLCHColorPickerState extends State<OKLCHColorPicker> {
   }
 
   void _updateColor() {
-    Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue);
+    Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).color;
     widget.onColorChanged(newColor);
   }
 }
