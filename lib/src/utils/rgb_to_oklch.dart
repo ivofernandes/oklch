@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 class RGBtoOKLCH {
-
   static List<double> convertColorToOKLCH(Color color) {
     // Extract RGB values
     int r = color.red;

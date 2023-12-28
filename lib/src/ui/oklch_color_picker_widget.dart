@@ -24,7 +24,8 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   @override
   void initState() {
     super.initState();
-    var oklch = OKLCHColor.fromColor(widget.color).array; // Convert initial color to OKLCH
+    var oklch = OKLCHColor.fromColor(widget.color)
+        .array; // Convert initial color to OKLCH
     lightness = oklch[0];
     chroma = oklch[1];
     hue = oklch[2];
@@ -54,7 +55,8 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
     );
   }
 
-  Widget _buildSlider(String label, double value, double min, double max, ValueChanged<double> onChanged,
+  Widget _buildSlider(String label, double value, double min, double max,
+      ValueChanged<double> onChanged,
       {required bool isHue}) {
     return Row(
       children: <Widget>[
@@ -69,7 +71,9 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
               min: min,
               max: max,
               onChanged: onChanged,
-              divisions: isHue ? null : 10, // Optional: add divisions for non-hue sliders
+              divisions: isHue
+                  ? null
+                  : 10, // Optional: add divisions for non-hue sliders
             ),
           ),
         ),
@@ -106,7 +110,7 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
       isDiscrete: isDiscrete,
     );
 
-    final Gradient gradient = LinearGradient(
+    const Gradient gradient = LinearGradient(
       colors: <Color>[
         Colors.red,
         Colors.orange,
@@ -135,7 +139,8 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
     // Adjust these values as per your design needs
     final double trackHeight = sliderTheme.trackHeight ?? 4;
     final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }

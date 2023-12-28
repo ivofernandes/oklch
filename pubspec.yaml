@@ -1,7 +1,9 @@
 name: oklch
-description: "A new Flutter package project."
+description: OKLCH is a new way to encode colors (like hex, RGBA, or HSL)
 version: 0.0.1
-homepage:
+homepage: https://incaview.com
+repository: https://github.com/ivofernandes/oklch
+
 
 environment:
   sdk: '>=3.2.1 <4.0.0'

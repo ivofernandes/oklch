@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:oklch/src/rgb_to_oklch.dart';
+import 'package:oklch/src/utils/rgb_to_oklch.dart';
 
-import 'oklch_to_rgb.dart'; // Assuming you have the OKLCH to RGB conversion logic
+import 'utils/oklch_to_rgb.dart'; // Assuming you have the OKLCH to RGB conversion logic
 
 class OKLCHColor {
-
   double lightness;
   double chroma;
   double hue;
@@ -12,8 +11,8 @@ class OKLCHColor {
 
   OKLCHColor(this.lightness, this.chroma, this.hue, [this.alpha = 1.0]);
 
-  factory OKLCHColor.fromOKLCH(double l, double c, double h, [double alpha = 1.0]) {
-    List<int> rgb = OKLCHtoRGB.convert(l, c, h);
+  factory OKLCHColor.fromOKLCH(double l, double c, double h,
+      [double alpha = 1.0]) {
     return OKLCHColor(l, c, h, alpha);
   }
 
@@ -36,6 +35,6 @@ class OKLCHColor {
     return '#$rHex$gHex$bHex';
   }
 
-  String get textDescription => 'OKLCH(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)})';
-
+  String get textDescription =>
+      'OKLCH(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)})';
 }

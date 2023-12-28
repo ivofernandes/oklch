@@ -1,22 +1,15 @@
-import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:oklch/oklch.dart';
 
 void main() {
-  group('OKLCHtoRGB', () {
+  /// https://oklch.com/#62.795536061455145,0.25768330773615683,29.2338851923426,100
+  group('OKLCHColor tests based on website', () {
     test('Converts OKLCH to RGB', () {
       // Test case 1
-      List<int> result1 = OKLCHtoRGB.convert(70.0, 50.0, 45.0);
-      expect(result1, equals([246, 144, 109]));
-
-      // Test case 2
-      List<int> result2 = OKLCHtoRGB.convert(50.0, 80.0, 120.0);
-      expect(result2, equals([75, 134, 0]));
-
-      // Add more test cases as needed
+      OKLCHColor result1 = OKLCHColor.fromOKLCH(
+          62.795536061455145, 0.25768330773615683, 29.2338851923426, 100);
+      final String hex = result1.rgbHex;
+      expect(hex, equals('#ff0000'));
     });
   });
-
-  /// https://oklch.com/#60.43,60.59,266.71,100
-
 }
