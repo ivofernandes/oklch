@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 class RGBtoOKLCH {
+  // Convert Color to OKLCH
   static List<double> convertColorToOKLCH(Color color) {
     // Extract RGB values
     int r = color.red;
@@ -14,38 +15,27 @@ class RGBtoOKLCH {
 
   // Function to convert RGB to OKLCH
   static List<double> convert(int r, int g, int b) {
-    // Step 1: Convert RGB to XYZ
-    List<double> xyz = _rgbToXyz(r, g, b);
+    // Step 1: Convert sRGB to linear RGB
+    List<double> linearRgb = _sRgbToLinearRgb(r, g, b);
 
-    // Step 2: Convert XYZ to Lab
-    List<double> lab = _xyzToLab(xyz[0], xyz[1], xyz[2]);
+    // Step 2: Convert linear RGB to Oklab
+    List<double> oklab =
+        _linearRgbToOklab(linearRgb[0], linearRgb[1], linearRgb[2]);
 
-    // Step 3: Convert Lab to OKLCH
-    return _labToOklch(lab[0], lab[1], lab[2]);
+    // Step 3: Convert Oklab to OKLCH
+    return _oklabToOklch(oklab[0], oklab[1], oklab[2]);
   }
 
-  // RGB to XYZ conversion (assuming sRGB color space)
-  static List<double> _rgbToXyz(int r, int g, int b) {
-    // Normalize RGB values to the range 0-1
-    double rNorm = r / 255.0;
-    double gNorm = g / 255.0;
-    double bNorm = b / 255.0;
-
-    // Apply reverse gamma correction
-    rNorm = _inverseGammaCorrection(rNorm);
-    gNorm = _inverseGammaCorrection(gNorm);
-    bNorm = _inverseGammaCorrection(bNorm);
-
-    // Convert to XYZ using the sRGB color space
-    double x = (0.4124 * rNorm + 0.3576 * gNorm + 0.1805 * bNorm) / 0.95047;
-    double y = (0.2126 * rNorm + 0.7152 * gNorm + 0.0722 * bNorm);
-    double z = (0.0193 * rNorm + 0.1192 * gNorm + 0.9505 * bNorm) / 1.08883;
-
-    return [x, y, z];
+  // sRGB to linear RGB conversion
+  static List<double> _sRgbToLinearRgb(int r, int g, int b) {
+    double rLin = _gammaCorrect(r / 255.0);
+    double gLin = _gammaCorrect(g / 255.0);
+    double bLin = _gammaCorrect(b / 255.0);
+    return [rLin, gLin, bLin];
   }
 
-  // Inverse gamma correction for sRGB
-  static double _inverseGammaCorrection(double c) {
+  // Gamma correction for sRGB
+  static double _gammaCorrect(double c) {
     if (c <= 0.04045) {
       return c / 12.92;
     } else {
@@ -53,40 +43,34 @@ class RGBtoOKLCH {
     }
   }
 
-  // XYZ to Lab conversion (assuming D65 illuminant)
-  static List<double> _xyzToLab(double x, double y, double z) {
-    x *= 0.95047; // Scale for D65 illuminant
-    y *= 1.00000;
-    z *= 1.08883; // Scale for D65 illuminant
+  // Linear RGB to Oklab conversion
+  static List<double> _linearRgbToOklab(double r, double g, double b) {
+    // Apply the matrix multiplication using the coefficients from the blog post
+    double l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
+    double m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
+    double s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
 
-    x = _labFunc(x);
-    y = _labFunc(y);
-    z = _labFunc(z);
+    // Apply cubic root
+    double l_ = cbrt(l);
+    double m_ = cbrt(m);
+    double s_ = cbrt(s);
 
-    double l = (116 * y) - 16;
-    double a = 500 * (x - y);
-    double b = 200 * (y - z);
-
-    return [l, a, b];
+    // Final calculation
+    double LCube = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+    double aCube = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+    double bCube = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+    return [LCube, aCube, bCube];
   }
 
-  // Function for Lab conversion
-  static double _labFunc(double t) {
-    double delta = 6.0 / 29.0;
-    if (t > pow(delta, 3)) {
-      return pow(t, 1 / 3).toDouble();
-    } else {
-      return t / (3 * pow(delta, 2)) + 4.0 / 29.0;
-    }
-  }
-
-  // Lab to OKLCH conversion
-  static List<double> _labToOklch(double l, double a, double b) {
+  // Oklab to OKLCH conversion
+  static List<double> _oklabToOklch(double l, double a, double b) {
     double c = sqrt(a * a + b * b);
-    double h = atan2(b, a) * 180 / pi;
-    if (h < 0) {
-      h = 360 + h;
-    }
-    return [l, c, h];
+    double h = atan2(b, a);
+    if (h < 0) h += 2 * pi;
+    return [l, c, h * 180 / pi];
+  }
+
+  static double cbrt(double x) {
+    return pow(x, 1 / 3).toDouble();
   }
 }
