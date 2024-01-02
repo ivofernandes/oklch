@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:oklch/src/oklch_color.dart';
+import 'package:oklch/src/ui/gradient_rect_slider_track_shape.dart';
 
-import '../oklch_color.dart'; // Replace with your actual OKLCHColor class
-
+/// OKLCHColorPickerWidget provides a widget for selecting colors in the OKLCH color space.
+/// It allows the user to adjust lightness, chroma, and hue to choose a color.
 class OKLCHColorPickerWidget extends StatefulWidget {
+  /// The initial color for the picker
   final Color color;
+
+  /// Callback for when the color changes
   final ValueChanged<Color> onColorChanged;
 
+  /// List of colors to use for the hue slider
+  final List<Color> hueColors;
+
   const OKLCHColorPickerWidget({
-    super.key,
     required this.color,
     required this.onColorChanged,
+    this.hueColors = const [
+      Colors.red,
+      Colors.orange,
+      Colors.yellow,
+      Colors.green,
+      Colors.blue,
+      Colors.indigo,
+      Colors.purple,
+      Colors.red,
+    ],
+    super.key,
   });
 
   @override
@@ -17,6 +35,8 @@ class OKLCHColorPickerWidget extends StatefulWidget {
 }
 
 class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
+
+
   late double lightness;
   late double chroma;
   late double hue;
@@ -64,7 +84,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         Expanded(
           child: SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              trackShape: isHue ? GradientRectSliderTrackShape() : null,
+              trackShape: isHue ? GradientRectSliderTrackShape(widget.hueColors) : null,
             ),
             child: Slider(
               value: value,
@@ -84,64 +104,5 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   void _updateColor() {
     Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).color;
     widget.onColorChanged(newColor);
-  }
-}
-
-class GradientRectSliderTrackShape extends SliderTrackShape {
-  @override
-  void paint(
-    PaintingContext context,
-    Offset offset, {
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required Animation<double> enableAnimation,
-    required TextDirection textDirection,
-    Offset? secondaryOffset, // Add this parameter
-    required Offset thumbCenter,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-    double additionalActiveTrackHeight = 2,
-  }) {
-    final Rect trackRect = getPreferredRect(
-      parentBox: parentBox,
-      offset: offset,
-      sliderTheme: sliderTheme,
-      isEnabled: isEnabled,
-      isDiscrete: isDiscrete,
-    );
-
-    const Gradient gradient = LinearGradient(
-      colors: <Color>[
-        Colors.red,
-        Colors.orange,
-        Colors.yellow,
-        Colors.green,
-        Colors.blue,
-        Colors.indigo,
-        Colors.purple,
-        Colors.red,
-      ],
-    );
-
-    final Paint paint = Paint()..shader = gradient.createShader(trackRect);
-    context.canvas.drawRect(trackRect, paint);
-  }
-
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    // Define the shape and size of the slider track
-    // Adjust these values as per your design needs
-    final double trackHeight = sliderTheme.trackHeight ?? 4;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

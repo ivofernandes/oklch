@@ -4,7 +4,7 @@ import 'package:oklch/oklch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -56,10 +56,10 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('OKLCH Color Picker Demo'),
+        title: const Text('OKLCH Color Picker Demo'),
         actions: [
           IconButton(
-            icon: Icon(Icons.open_in_new),
+            icon: const Icon(Icons.open_in_new),
             onPressed: () {
               final String url = _generateOKLCHUrl();
               debugPrint(url);
@@ -94,41 +94,41 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: rgbController,
-                decoration: InputDecoration(labelText: 'RGB Value'),
+                decoration: const InputDecoration(labelText: 'RGB Value'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: oklchController,
-                decoration: InputDecoration(labelText: 'OKLCH Value'),
+                decoration: const InputDecoration(labelText: 'OKLCH Value'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: hexController,
-                decoration: InputDecoration(labelText: 'Hex Value'),
+                decoration: const InputDecoration(labelText: 'Hex Value'),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 MaterialButton(
-                  child: Text('Copy RGB'),
+                  child: const Text('Copy RGB'),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: rgbController.text));
                   },
                 ),
                 MaterialButton(
-                  child: Text('Copy OKLCH'),
+                  child: const Text('Copy OKLCH'),
                   onPressed: () {
                     Clipboard.setData(
                         ClipboardData(text: oklchController.text));
                   },
                 ),
                 MaterialButton(
-                  child: Text('Copy Hex'),
+                  child: const Text('Copy Hex'),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: hexController.text));
                   },
