@@ -19,8 +19,7 @@ class RGBtoOKLCH {
     List<double> linearRgb = _sRgbToLinearRgb(r, g, b);
 
     // Step 2: Convert linear RGB to Oklab
-    List<double> oklab =
-        _linearRgbToOklab(linearRgb[0], linearRgb[1], linearRgb[2]);
+    List<double> oklab = _linearRgbToOklab(linearRgb[0], linearRgb[1], linearRgb[2]);
 
     // Step 3: Convert Oklab to OKLCH
     return _oklabToOklch(oklab[0], oklab[1], oklab[2]);
@@ -45,7 +44,7 @@ class RGBtoOKLCH {
 
   // Linear RGB to Oklab conversion
   static List<double> _linearRgbToOklab(double r, double g, double b) {
-    // Apply the matrix multiplication using the coefficients from the blog post
+    // Convert linear RGB to LMS
     double l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
     double m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
     double s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
@@ -55,11 +54,11 @@ class RGBtoOKLCH {
     double m_ = cbrt(m);
     double s_ = cbrt(s);
 
-    // Final calculation
+    // Convert LMS to Oklab
     double lCube = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
     double aCube = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
     double bCube = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
-    return [lCube, aCube, bCube];
+    return [lCube * 100, aCube, bCube]; // Multiply L by 100
   }
 
   // Oklab to OKLCH conversion

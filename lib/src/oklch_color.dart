@@ -37,7 +37,10 @@ class OKLCHColor {
   /// Converts the OKLCH color to a Flutter Color object using RGB values.
   Color get color {
     List<int> rgb = OKLCHtoRGB.convert(lightness, chroma, hue);
-    return Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1.0);
+    final red = rgb[0];
+    final green = rgb[1];
+    final blue = rgb[2];
+    return Color.fromRGBO(red, green, blue, 1.0);
   }
 
   /// Returns the OKLCH color components (including alpha) as a list of doubles.

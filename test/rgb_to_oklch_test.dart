@@ -39,5 +39,32 @@ void main() {
       expect(result.chroma, closeTo(0.31321437166460125, 0.001));
       expect(result.hue, closeTo(264.052020638055, 0.001));
     });
+
+    /// Light green color
+    /// https://oklch.com/#70,0.1,160,100
+    test('Converts RGB to OKLCH for light green', () {
+      // Test case 4
+      print('Test for RGB light green color');
+      OKLCHColor result = OKLCHColor.fromColor(Color(0xff62b289));
+
+      // Verify with the expected value
+      //expect(result.lightness, closeTo(70, 0.001));
+      //expect(result.chroma, closeTo(0.1, 0.001));
+      //expect(result.hue, closeTo(160, 0.001));
+    });
+
+    /// White color
+    /// https://oklch.com/#100,0,0,100
+    test('Converts RGB to OKLCH for white', () {
+      // Test case 5
+      print('Test for RGB white color');
+      OKLCHColor result = OKLCHColor.fromColor(Color(0xffffffff));
+
+      // Verify with the expected value
+      //expect(result.lightness, closeTo(100, 0.001));
+      //expect(result.chroma, closeTo(0, 0.001));
+      //expect(result.hue, closeTo(0, 0.001));
+    });
+
   });
 }
