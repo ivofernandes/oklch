@@ -42,5 +42,46 @@ void main() {
         // Verify with the expected value
         expect(hex, equals('#0000ff'));
       });
+
+
+      /// https://oklch.com/#70,0.1,160,100
+      /// Light green color
+      test('Converts OKLCH to RGB light green', () {
+        // Test case 4
+        print('Test for light green color');
+        OKLCHColor result1 = OKLCHColor.fromOKLCH(
+            70, 0.1, 160, 100);
+        final String hex = result1.rgbHex;
+
+        // Verify with the expected value
+        expect(hex, equals('#62b289'));
+      });
+    });
+
+    /// https://oklch.com/#100,0,0,100
+    /// White color
+    test('Converts OKLCH to RGB white', () {
+      // Test case 5
+      print('Test for white color');
+      OKLCHColor result1 = OKLCHColor.fromOKLCH(
+          100, 0, 0, 100);
+      final String hex = result1.rgbHex;
+
+      // Verify with the expected value
+      expect(hex, equals('#ffffff'));
+    });
+
+
+    /// https://oklch.com/#48.98,0,0,100
+    /// Grey color
+    test('Converts OKLCH to RGB grey', () {
+      // Test case 6
+      print('Test for grey color');
+      OKLCHColor result1 = OKLCHColor.fromOKLCH(
+          48.98, 0, 0, 100);
+      final String hex = result1.rgbHex;
+
+      // Verify with the expected value
+      expect(hex, equals('#606060'));
     });
   }

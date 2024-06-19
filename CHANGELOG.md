@@ -6,3 +6,6 @@ Updated formula
 
 ## 0.0.3
 Improved documentation
+
+## 0.0.4
+Fix conversion
