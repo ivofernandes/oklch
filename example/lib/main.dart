@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'OKLCH Color Picker Example',
       home: ColorPickerDemo(),
     );
@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
 }
 
 class ColorPickerDemo extends StatefulWidget {
+  const ColorPickerDemo({
+    super.key,
+  });
+
   @override
   _ColorPickerDemoState createState() => _ColorPickerDemoState();
 }

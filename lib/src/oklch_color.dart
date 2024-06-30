@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oklch/src/utils/oklch_to_rgb.dart'; // Import OKLCH to RGB conversion utility
 import 'package:oklch/src/utils/rgb_to_oklch.dart'; // Import RGB to OKLCH conversion utility
-import 'utils/oklch_to_rgb.dart'; // Import OKLCH to RGB conversion utility
 
 /// The OKLCHColor class represents colors in the OKLCH color space.
 /// OKLCH is a perceptually uniform color space, which can be useful for
@@ -19,28 +19,33 @@ class OKLCHColor {
   double alpha;
 
   /// Main constructor for creating an OKLCHColor object.
-  OKLCHColor(this.lightness, this.chroma, this.hue, [this.alpha = 1.0]);
+  OKLCHColor(
+    this.lightness,
+    this.chroma,
+    this.hue, [
+    this.alpha = 1.0,
+  ]);
 
   /// Factory constructor to create an OKLCHColor instance from given OKLCH values.
   /// Optionally, an alpha value can be specified.
-  factory OKLCHColor.fromOKLCH(double l, double c, double h, [double alpha = 1.0]) {
-    return OKLCHColor(l, c, h, alpha);
-  }
+  factory OKLCHColor.fromOKLCH(double l, double c, double h,
+          [double alpha = 1.0]) =>
+      OKLCHColor(l, c, h, alpha);
 
   /// Factory constructor that creates an OKLCHColor instance from a Flutter Color object.
   /// Converts RGB values to OKLCH.
   factory OKLCHColor.fromColor(Color color) {
-    List<double> oklch = RGBtoOKLCH.convertColorToOKLCH(color);
+    final List<double> oklch = RGBtoOKLCH.convertColorToOKLCH(color);
     return OKLCHColor(oklch[0], oklch[1], oklch[2]);
   }
 
   /// Converts the OKLCH color to a Flutter Color object using RGB values.
   Color get color {
-    List<int> rgb = OKLCHtoRGB.convert(lightness, chroma, hue);
+    final List<int> rgb = OKLCHtoRGB.convert(lightness, chroma, hue);
     final red = rgb[0];
     final green = rgb[1];
     final blue = rgb[2];
-    return Color.fromRGBO(red, green, blue, 1.0);
+    return Color.fromRGBO(red, green, blue, 1);
   }
 
   /// Returns the OKLCH color components (including alpha) as a list of doubles.

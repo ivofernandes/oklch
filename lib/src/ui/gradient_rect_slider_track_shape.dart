@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 class GradientRectSliderTrackShape extends SliderTrackShape {
-
   final List<Color> hueColors;
 
   const GradientRectSliderTrackShape(this.hueColors);
+
   @override
   void paint(
-      PaintingContext context,
-      Offset offset, {
-        required RenderBox parentBox,
-        required SliderThemeData sliderTheme,
-        required Animation<double> enableAnimation,
-        required TextDirection textDirection,
-        Offset? secondaryOffset, // Add this parameter
-        required Offset thumbCenter,
-        bool isDiscrete = false,
-        bool isEnabled = false,
-        double additionalActiveTrackHeight = 2,
-      }) {
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset, // Add this parameter
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 2,
+  }) {
     final Rect trackRect = getPreferredRect(
       parentBox: parentBox,
       offset: offset,
@@ -27,7 +27,7 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
       isDiscrete: isDiscrete,
     );
 
-    Gradient gradient = LinearGradient(
+    final Gradient gradient = LinearGradient(
       colors: hueColors,
     );
 
@@ -38,8 +38,8 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
   @override
   Rect getPreferredRect({
     required RenderBox parentBox,
-    Offset offset = Offset.zero,
     required SliderThemeData sliderTheme,
+    Offset offset = Offset.zero,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {

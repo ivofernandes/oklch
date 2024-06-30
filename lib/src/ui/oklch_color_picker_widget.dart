@@ -35,16 +35,19 @@ class OKLCHColorPickerWidget extends StatefulWidget {
 }
 
 class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
-
-
+  /// Lightness component of the OKLCH color model
   late double lightness;
+
+  /// Chroma component, indicating the color intensity or purity
   late double chroma;
+
+  /// Hue component, defining the type of color (like blue, green, etc.)
   late double hue;
 
   @override
   void initState() {
     super.initState();
-    var oklch = OKLCHColor.fromColor(widget.color)
+    final oklch = OKLCHColor.fromColor(widget.color)
         .array; // Convert initial color to OKLCH
     lightness = oklch[0];
     chroma = oklch[1];
@@ -52,57 +55,56 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _buildSlider("Lightness", lightness, 0, 100, (newValue) {
-          setState(() => lightness = newValue);
-          _updateColor();
-        }, isHue: false),
-        _buildSlider("Chroma", chroma, 0, 128, (newValue) {
-          setState(() => chroma = newValue);
-          _updateColor();
-        }, isHue: false),
-        _buildSlider("Hue", hue, 0, 360, (newValue) {
-          setState(() => hue = newValue);
-          _updateColor();
-        }, isHue: true),
-        Container(
-          height: 50,
-          color: OKLCHColor.fromOKLCH(lightness, chroma, hue).color,
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          _buildSlider('Lightness', lightness, 0, 100, (newValue) {
+            setState(() => lightness = newValue);
+            _updateColor();
+          }, isHue: false),
+          _buildSlider('Chroma', chroma, 0, 128, (newValue) {
+            setState(() => chroma = newValue);
+            _updateColor();
+          }, isHue: false),
+          _buildSlider('Hue', hue, 0, 360, (newValue) {
+            setState(() => hue = newValue);
+            _updateColor();
+          }, isHue: true),
+          Container(
+            height: 50,
+            color: OKLCHColor.fromOKLCH(lightness, chroma, hue).color,
+          ),
+        ],
+      );
 
   Widget _buildSlider(String label, double value, double min, double max,
-      ValueChanged<double> onChanged,
-      {required bool isHue}) {
-    return Row(
-      children: <Widget>[
-        Text(label),
-        Expanded(
-          child: SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              trackShape: isHue ? GradientRectSliderTrackShape(widget.hueColors) : null,
-            ),
-            child: Slider(
-              value: value,
-              min: min,
-              max: max,
-              onChanged: onChanged,
-              divisions: isHue
-                  ? null
-                  : 10, // Optional: add divisions for non-hue sliders
+          ValueChanged<double> onChanged,
+          {required bool isHue}) =>
+      Row(
+        children: <Widget>[
+          Text(label),
+          Expanded(
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackShape: isHue
+                    ? GradientRectSliderTrackShape(widget.hueColors)
+                    : null,
+              ),
+              child: Slider(
+                value: value,
+                min: min,
+                max: max,
+                onChanged: onChanged,
+                divisions: isHue
+                    ? null
+                    : 10, // Optional: add divisions for non-hue sliders
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   void _updateColor() {
-    Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).color;
+    final Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).color;
     widget.onColorChanged(newColor);
   }
 }

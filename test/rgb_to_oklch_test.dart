@@ -8,7 +8,7 @@ void main() {
     test('Converts RGB to OKLCH for red', () {
       // Test case 1
       print('Test for RGB red color');
-      OKLCHColor result = OKLCHColor.fromColor(Color(0xffff0000));
+      final OKLCHColor result = OKLCHColor.fromColor(const Color(0xffff0000));
 
       // Verify with the expected value
       expect(result.lightness, closeTo(62.795536061455145, 0.001));
@@ -20,7 +20,7 @@ void main() {
     test('Converts RGB to OKLCH for green', () {
       // Test case 2
       print('Test for RGB green color');
-      OKLCHColor result = OKLCHColor.fromColor(Color(0xff00ff00));
+      final OKLCHColor result = OKLCHColor.fromColor(const Color(0xff00ff00));
 
       // Verify with the expected value
       expect(result.lightness, closeTo(86.64396115356693, 0.001));
@@ -32,7 +32,7 @@ void main() {
     test('Converts RGB to OKLCH for blue', () {
       // Test case 3
       print('Test for RGB blue color');
-      OKLCHColor result = OKLCHColor.fromColor(Color(0xff0000ff));
+      final OKLCHColor result = OKLCHColor.fromColor(const Color(0xff0000ff));
 
       // Verify with the expected value
       expect(result.lightness, closeTo(45.201371838534286, 0.001));
@@ -45,7 +45,7 @@ void main() {
     test('Converts RGB to OKLCH for light green', () {
       // Test case 4
       print('Test for RGB light green color');
-      OKLCHColor result = OKLCHColor.fromColor(Color(0xff62b289));
+      final OKLCHColor result = OKLCHColor.fromColor(const Color(0xff62b289));
 
       // Verify with the expected value
       //expect(result.lightness, closeTo(70, 0.001));
@@ -58,13 +58,12 @@ void main() {
     test('Converts RGB to OKLCH for white', () {
       // Test case 5
       print('Test for RGB white color');
-      OKLCHColor result = OKLCHColor.fromColor(Color(0xffffffff));
+      final OKLCHColor result = OKLCHColor.fromColor(const Color(0xffffffff));
 
       // Verify with the expected value
       //expect(result.lightness, closeTo(100, 0.001));
       //expect(result.chroma, closeTo(0, 0.001));
       //expect(result.hue, closeTo(0, 0.001));
     });
-
   });
 }
