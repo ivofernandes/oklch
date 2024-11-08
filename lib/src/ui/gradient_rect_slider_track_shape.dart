@@ -19,7 +19,7 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
     bool isEnabled = false,
     double additionalActiveTrackHeight = 2,
   }) {
-    final Rect trackRect = getPreferredRect(
+    final trackRect = getPreferredRect(
       parentBox: parentBox,
       offset: offset,
       sliderTheme: sliderTheme,
@@ -31,7 +31,7 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
       colors: hueColors,
     );
 
-    final Paint paint = Paint()..shader = gradient.createShader(trackRect);
+    final paint = Paint()..shader = gradient.createShader(trackRect);
     context.canvas.drawRect(trackRect, paint);
   }
 
@@ -45,11 +45,10 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
   }) {
     // Define the shape and size of the slider track
     // Adjust these values as per your design needs
-    final double trackHeight = sliderTheme.trackHeight ?? 4;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
+    final trackHeight = sliderTheme.trackHeight ?? 4;
+    final trackLeft = offset.dx;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
