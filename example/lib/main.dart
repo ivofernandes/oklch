@@ -48,7 +48,7 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
   void _updateColorControllers(Color color) {
     _oKLCHColor = OKLCHColor.fromColor(color);
     rgbController.text = 'RGB(${color.red}, ${color.green}, ${color.blue})';
-    oklchController.text = _oKLCHColor.textDescription;
+    oklchController.text = _oKLCHColor.toString();
     hexController.text = _oKLCHColor.rgbHex;
   }
 

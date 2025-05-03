@@ -2,18 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:oklch/src/oklch_color.dart';
 import 'package:oklch/src/ui/gradient_rect_slider_track_shape.dart';
 
-/// OKLCHColorPickerWidget provides a widget for selecting colors in the OKLCH color space.
+/// OKLCHColorPickerWidget provides a widget for
+/// selecting colors in the OKLCH color space.
 /// It allows the user to adjust lightness, chroma, and hue to choose a color.
 class OKLCHColorPickerWidget extends StatefulWidget {
-  /// The initial color for the picker
-  final Color color;
-
-  /// Callback for when the color changes
-  final ValueChanged<Color> onColorChanged;
-
-  /// List of colors to use for the hue slider
-  final List<Color> hueColors;
-
+  /// OKLCHColorPickerWidget constructor
   const OKLCHColorPickerWidget({
     required this.color,
     required this.onColorChanged,
@@ -30,7 +23,17 @@ class OKLCHColorPickerWidget extends StatefulWidget {
     super.key,
   });
 
+  /// The initial color for the picker
+  final Color color;
+
+  /// Callback for when the color changes
+  final ValueChanged<Color> onColorChanged;
+
+  /// List of colors to use for the hue slider
+  final List<Color> hueColors;
+
   @override
+  // ignore: library_private_types_in_public_api
   _OKLCHColorPickerWidgetState createState() => _OKLCHColorPickerWidgetState();
 }
 
@@ -47,38 +50,63 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   @override
   void initState() {
     super.initState();
-    final oklch = OKLCHColor.fromColor(widget.color)
-        .array; // Convert initial color to OKLCH
-    lightness = oklch[0];
-    chroma = oklch[1];
-    hue = oklch[2];
+    final oklch = OKLCHColor.fromColor(widget.color);
+    lightness = oklch.lightness;
+    chroma = oklch.chroma;
+    hue = oklch.hue;
   }
 
   @override
   Widget build(BuildContext context) => Column(
         children: <Widget>[
-          _buildSlider('Lightness', lightness, 0, 100, (newValue) {
-            setState(() => lightness = newValue);
-            _updateColor();
-          }, isHue: false),
-          _buildSlider('Chroma', chroma, 0, 128, (newValue) {
-            setState(() => chroma = newValue);
-            _updateColor();
-          }, isHue: false),
-          _buildSlider('Hue', hue, 0, 360, (newValue) {
-            setState(() => hue = newValue);
-            _updateColor();
-          }, isHue: true),
+          _buildSlider(
+            'Lightness',
+            lightness,
+            0,
+            100,
+            (newValue) {
+              setState(() => lightness = newValue);
+              _updateColor();
+            },
+            isHue: false,
+          ),
+          _buildSlider(
+            'Chroma',
+            chroma,
+            0,
+            128,
+            (newValue) {
+              setState(() => chroma = newValue);
+              _updateColor();
+            },
+            isHue: false,
+          ),
+          _buildSlider(
+            'Hue',
+            hue,
+            0,
+            360,
+            (newValue) {
+              setState(() => hue = newValue);
+              _updateColor();
+            },
+            isHue: true,
+          ),
           Container(
             height: 50,
-            color: OKLCHColor.fromOKLCH(lightness, chroma, hue).color,
+            color: OKLCHColor.fromOKLCH(lightness, chroma, hue).toColor(),
           ),
         ],
       );
 
-  Widget _buildSlider(String label, double value, double min, double max,
-          ValueChanged<double> onChanged,
-          {required bool isHue}) =>
+  Widget _buildSlider(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged, {
+    required bool isHue,
+  }) =>
       Row(
         children: <Widget>[
           Text(label),
@@ -104,7 +132,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
       );
 
   void _updateColor() {
-    final Color newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).color;
+    final newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).toColor();
     widget.onColorChanged(newColor);
   }
 }
