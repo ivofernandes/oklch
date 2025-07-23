@@ -11,7 +11,7 @@ void main() {
         62.795536061455145,
         0.25768330773615683,
         29.2338851923426,
-        100,
+        1.0,
       );
       final hex = result1.rgbHex;
 
@@ -27,7 +27,8 @@ void main() {
         86.64396115356693,
         0.2948272403370167,
         142.49533888780996,
-        100,
+        1.0,
+      );
       );
       final hex = result1.rgbHex;
 
@@ -43,7 +44,7 @@ void main() {
         45.201371838534286,
         0.31321437166460125,
         264.052020638055,
-        100,
+        1.0,
       );
       final hex = result1.rgbHex;
 
@@ -55,7 +56,7 @@ void main() {
     /// Light green color
     test('Converts OKLCH to RGB light green', () {
       // Test case 4
-      final result1 = OKLCHColor.fromOKLCH(70, 0.1, 160, 100);
+      final result1 = OKLCHColor.fromOKLCH(70, 0.1, 160, 1.0);
       final hex = result1.rgbHex;
 
       // Verify with the expected value
@@ -67,7 +68,7 @@ void main() {
   /// White color
   test('Converts OKLCH to RGB white', () {
     // Test case 5
-    final result1 = OKLCHColor.fromOKLCH(100, 0, 0, 100);
+    final result1 = OKLCHColor.fromOKLCH(100, 0, 0, 1.0);
     final hex = result1.rgbHex;
 
     // Verify with the expected value
@@ -78,7 +79,7 @@ void main() {
   /// Grey color
   test('Converts OKLCH to RGB grey', () {
     // Test case 6
-    final result1 = OKLCHColor.fromOKLCH(48.98, 0, 0, 100);
+    final result1 = OKLCHColor.fromOKLCH(48.98, 0, 0, 1.0);
     final hex = result1.rgbHex;
 
     // Verify with the expected value
