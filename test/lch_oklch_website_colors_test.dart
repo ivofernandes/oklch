@@ -8,18 +8,18 @@ void main() {
     /// Expected to be an orange-red color
     /// Testing multiple chroma interpretations to find the correct one
     test('Converts OKLCH to RGB for reference orange-red color', () {
-      // Test with chroma normalized to 0-1 range (divided by 100)
+      // Test with chroma as very high value (likely incorrect but testing anyway)
       final result1 = OKLCHColor.fromOKLCH(
         50,       // Lightness
-        0.847,    // Chroma (84.7/100)
+        0.847,    // Chroma (84.7/100) - likely too high
         42.57,    // Hue in degrees
         1.0,      // Alpha
       );
       
-      // Test with chroma as a percentage (divided by 100 and then normalized)
+      // Test with chroma scaled down to reasonable range (more likely correct)
       final result2 = OKLCHColor.fromOKLCH(
         50,       // Lightness
-        0.3,      // Chroma (more reasonable value based on existing tests)
+        0.25,     // Chroma (more reasonable based on existing tests)
         42.57,    // Hue in degrees
         1.0,      // Alpha
       );
@@ -27,22 +27,31 @@ void main() {
       final hex1 = result1.rgbHex;
       final hex2 = result2.rgbHex;
 
-      print('Reference color with C=0.847: $hex1');
-      print('Reference color with C=0.3: $hex2');
+      print('Reference color with very high chroma (0.847): $hex1');
+      print('Reference color with reasonable chroma (0.25): $hex2');
       
       // Both should be valid hex colors
       expect(hex1.length, equals(7));
       expect(hex1.startsWith('#'), isTrue);
       expect(hex2.length, equals(7));
       expect(hex2.startsWith('#'), isTrue);
+      
+      // The high chroma version should be very saturated (likely pure or near-pure colors)
+      // The reasonable chroma version should be a nice orange-red
+      final rgb1 = result1.toColor();
+      final rgb2 = result2.toColor();
+      
+      // For the orange-red hue (~42.57°), red should be higher than blue
+      expect(rgb1.red, greaterThan(rgb1.blue));
+      expect(rgb2.red, greaterThan(rgb2.blue));
     });
 
     /// Test variations with different lightness values
     test('Converts OKLCH with different lightness values', () {
       final colors = [
-        OKLCHColor.fromOKLCH(25, 0.847, 42.57, 1.0),  // Darker
-        OKLCHColor.fromOKLCH(50, 0.847, 42.57, 1.0),  // Reference
-        OKLCHColor.fromOKLCH(75, 0.847, 42.57, 1.0),  // Lighter
+        OKLCHColor.fromOKLCH(25, 0.25, 42.57, 1.0),  // Darker
+        OKLCHColor.fromOKLCH(50, 0.25, 42.57, 1.0),  // Reference
+        OKLCHColor.fromOKLCH(75, 0.25, 42.57, 1.0),  // Lighter
       ];
 
       for (final color in colors) {
@@ -50,15 +59,20 @@ void main() {
         print('L=${color.lightness}, C=${color.chroma}, H=${color.hue} → $hex');
         expect(hex.length, equals(7));
         expect(hex.startsWith('#'), isTrue);
+        
+        // For this hue (~42.57°), we expect orange-red colors
+        final rgb = color.toColor();
+        expect(rgb.red, greaterThan(rgb.blue));
       }
     });
 
     /// Test variations with different chroma values
     test('Converts OKLCH with different chroma values', () {
       final colors = [
-        OKLCHColor.fromOKLCH(50, 0.2, 42.57, 1.0),    // Lower chroma
-        OKLCHColor.fromOKLCH(50, 0.5, 42.57, 1.0),    // Medium chroma
-        OKLCHColor.fromOKLCH(50, 0.847, 42.57, 1.0),  // High chroma (reference)
+        OKLCHColor.fromOKLCH(50, 0.05, 42.57, 1.0),   // Very low chroma (grayish)
+        OKLCHColor.fromOKLCH(50, 0.15, 42.57, 1.0),   // Low chroma
+        OKLCHColor.fromOKLCH(50, 0.25, 42.57, 1.0),   // Medium chroma (reference)
+        OKLCHColor.fromOKLCH(50, 0.35, 42.57, 1.0),   // Higher chroma
       ];
 
       for (final color in colors) {
@@ -66,6 +80,17 @@ void main() {
         print('L=${color.lightness}, C=${color.chroma}, H=${color.hue} → $hex');
         expect(hex.length, equals(7));
         expect(hex.startsWith('#'), isTrue);
+        
+        final rgb = color.toColor();
+        // For the orange-red hue, red should be higher than blue
+        expect(rgb.red, greaterThan(rgb.blue));
+        
+        // Higher chroma should produce more saturated colors
+        if (color.chroma > 0.1) {
+          // For significant chroma, expect some color difference from gray
+          final grayLevel = (rgb.red + rgb.green + rgb.blue) / 3;
+          expect((rgb.red - grayLevel).abs() + (rgb.green - grayLevel).abs() + (rgb.blue - grayLevel).abs(), greaterThan(10));
+        }
       }
     });
 
@@ -92,7 +117,7 @@ void main() {
       final colors = [
         OKLCHColor.fromOKLCH(0, 0, 0, 1.0),        // Black
         OKLCHColor.fromOKLCH(100, 0, 0, 1.0),      // White
-        OKLCHColor.fromOKLCH(50, 1.0, 42.57, 1.0), // Maximum chroma
+        OKLCHColor.fromOKLCH(50, 0.4, 42.57, 1.0), // High but reasonable chroma
         OKLCHColor.fromOKLCH(50, 0, 42.57, 1.0),   // No chroma (gray)
       ];
 
@@ -101,6 +126,24 @@ void main() {
         print('L=${color.lightness}, C=${color.chroma}, H=${color.hue} → $hex');
         expect(hex.length, equals(7));
         expect(hex.startsWith('#'), isTrue);
+        
+        final rgb = color.toColor();
+        
+        // Black should be dark
+        if (color.lightness == 0) {
+          expect(rgb.red + rgb.green + rgb.blue, lessThan(30));
+        }
+        
+        // White should be bright
+        if (color.lightness == 100 && color.chroma == 0) {
+          expect(rgb.red + rgb.green + rgb.blue, greaterThan(700));
+        }
+        
+        // No chroma should produce gray-ish colors (R≈G≈B)
+        if (color.chroma == 0) {
+          expect((rgb.red - rgb.green).abs(), lessThan(10));
+          expect((rgb.green - rgb.blue).abs(), lessThan(10));
+        }
       }
     });
 
@@ -218,13 +261,14 @@ void main() {
     /// Test the specific website reference color more thoroughly
     test('Website reference color detailed test', () {
       // Based on https://lch.oklch.com/#50,84.7,42.57,100
-      // Try different normalizations of the chroma value
+      // The high chroma value (84.7) suggests it might be on a 0-100 scale
+      // Testing different reasonable interpretations
       
       final testColors = [
-        OKLCHColor.fromOKLCH(50, 0.847, 42.57, 1.0),  // Direct from URL
-        OKLCHColor.fromOKLCH(50, 0.25, 42.57, 1.0),   // Similar to existing tests
-        OKLCHColor.fromOKLCH(50, 0.2, 42.57, 1.0),    // Conservative chroma
-        OKLCHColor.fromOKLCH(50, 0.15, 42.57, 1.0),   // Low chroma
+        OKLCHColor.fromOKLCH(50, 0.25, 42.57, 1.0),   // Conservative interpretation
+        OKLCHColor.fromOKLCH(50, 0.3, 42.57, 1.0),    // Slightly higher
+        OKLCHColor.fromOKLCH(50, 0.35, 42.57, 1.0),   // Higher but reasonable
+        OKLCHColor.fromOKLCH(50, 0.4, 42.57, 1.0),    // High but still reasonable
       ];
       
       for (int i = 0; i < testColors.length; i++) {
@@ -239,12 +283,23 @@ void main() {
         
         // For the orange-red hue (~42.57°), we expect:
         // - Red component should be highest
-        // - Green component should be moderate
+        // - Green component should be moderate  
         // - Blue component should be lowest
         expect(rgbColor.red, greaterThan(rgbColor.blue));
-        if (color.chroma > 0.1) { // Only for colors with significant chroma
-          expect(rgbColor.red, greaterThan(rgbColor.green * 0.7));
-        }
+        
+        // For colors with reasonable chroma, red should dominate
+        expect(rgbColor.red, greaterThan(rgbColor.green * 0.8));
+        
+        // The color should not be too desaturated (unless chroma is very low)
+        final avgColor = (rgbColor.red + rgbColor.green + rgbColor.blue) / 3;
+        final maxDeviation = [
+          (rgbColor.red - avgColor).abs(),
+          (rgbColor.green - avgColor).abs(),
+          (rgbColor.blue - avgColor).abs()
+        ].reduce((a, b) => a > b ? a : b);
+        
+        // Expect some color variation (not pure gray)
+        expect(maxDeviation, greaterThan(5));
       }
     });
   });
