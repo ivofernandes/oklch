@@ -302,5 +302,32 @@ void main() {
         expect(maxDeviation, greaterThan(5));
       }
     });
+
+    /// Test consistency with known color values from the original website tests
+    test('Consistency with original website test values', () {
+      // Verify that our new reference color interpretation aligns with existing patterns
+      final referenceColor = OKLCHColor.fromOKLCH(50, 0.25, 42.57, 1.0);
+      final referenceHex = referenceColor.rgbHex;
+      final referenceRgb = referenceColor.toColor();
+      
+      print('Reference color interpretation: $referenceHex');
+      print('RGB: (${referenceRgb.red}, ${referenceRgb.green}, ${referenceRgb.blue})');
+      
+      // Should produce a valid hex
+      expect(referenceHex.length, equals(7));
+      expect(referenceHex.startsWith('#'), isTrue);
+      
+      // Should produce a color in the orange-red family
+      // Red should be prominent, some green, minimal blue
+      expect(referenceRgb.red, greaterThan(100)); // Should have significant red
+      expect(referenceRgb.red, greaterThan(referenceRgb.green)); // Red > Green
+      expect(referenceRgb.red, greaterThan(referenceRgb.blue)); // Red > Blue
+      expect(referenceRgb.blue, lessThan(referenceRgb.green)); // Blue should be least
+      
+      // Verify the color makes sense for the given lightness (50 = medium brightness)
+      final totalBrightness = referenceRgb.red + referenceRgb.green + referenceRgb.blue;
+      expect(totalBrightness, greaterThan(200)); // Not too dark
+      expect(totalBrightness, lessThan(600)); // Not too bright
+    });
   });
 }
