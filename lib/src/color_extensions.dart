@@ -5,9 +5,9 @@ import 'dart:ui';
 
 extension ColorExtensions on Color {
   (double, double, double) toLinearRGB() {
-    final rLin = _gammaCorrect(red / 255);
-    final gLin = _gammaCorrect(green / 255);
-    final bLin = _gammaCorrect(blue / 255);
+    final rLin = _gammaCorrect(r);
+    final gLin = _gammaCorrect(g);
+    final bLin = _gammaCorrect(b);
     return (rLin, gLin, bLin);
   }
 

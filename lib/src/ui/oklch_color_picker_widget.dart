@@ -33,8 +33,8 @@ class OKLCHColorPickerWidget extends StatefulWidget {
   final List<Color> hueColors;
 
   @override
-  // ignore: library_private_types_in_public_api
-  _OKLCHColorPickerWidgetState createState() => _OKLCHColorPickerWidgetState();
+  State<OKLCHColorPickerWidget> createState() =>
+      _OKLCHColorPickerWidgetState();
 }
 
 class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {

@@ -57,9 +57,9 @@ class OKLCHColor {
   /// Provides a hexadecimal representation of the OKLCH color in the RGB color space.
   String get rgbHex {
     final c = toColor();
-    final rHex = c.red.toRadixString(16).padLeft(2, '0');
-    final gHex = c.green.toRadixString(16).padLeft(2, '0');
-    final bHex = c.blue.toRadixString(16).padLeft(2, '0');
+    final rHex = _channelToInt(c.r).toRadixString(16).padLeft(2, '0');
+    final gHex = _channelToInt(c.g).toRadixString(16).padLeft(2, '0');
+    final bHex = _channelToInt(c.b).toRadixString(16).padLeft(2, '0');
     return '#$rHex$gHex$bHex';
   }
 
@@ -95,4 +95,9 @@ class OKLCHColor {
         hue,
         a,
       );
+
+  int _channelToInt(double channel) {
+    final scaled = (channel.clamp(0, 1) * 255).round();
+    return scaled.clamp(0, 255) & 0xff;
+  }
 }

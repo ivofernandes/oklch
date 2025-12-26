@@ -27,7 +27,7 @@ class ColorPickerDemo extends StatefulWidget {
   });
 
   @override
-  _ColorPickerDemoState createState() => _ColorPickerDemoState();
+  State<ColorPickerDemo> createState() => _ColorPickerDemoState();
 }
 
 class _ColorPickerDemoState extends State<ColorPickerDemo> {
@@ -47,7 +47,10 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
 
   void _updateColorControllers(Color color) {
     _oKLCHColor = OKLCHColor.fromColor(color);
-    rgbController.text = 'RGB(${color.red}, ${color.green}, ${color.blue})';
+    final r = (color.r * 255).round();
+    final g = (color.g * 255).round();
+    final b = (color.b * 255).round();
+    rgbController.text = 'RGB($r, $g, $b)';
     oklchController.text = _oKLCHColor.toString();
     hexController.text = _oKLCHColor.rgbHex;
   }
