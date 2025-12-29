@@ -61,5 +61,73 @@ void main() {
       expect(result.chroma, closeTo(0, 0.001));
       expect(result.hue, closeTo(0, 0.001));
     });
+
+    test('Matches additional OKLCH.com samples', () {
+      final samples = <({
+        String name,
+        Color color,
+        double lightness,
+        double chroma,
+        double hue,
+        String url,
+      })>[
+        (
+          name: 'deep pink',
+          color: const Color(0xffff1493),
+          lightness: 65.49349935138736,
+          chroma: 0.26133649638412065,
+          hue: 356.9447697294126,
+          url:
+              'https://oklch.com/#65.49349935138736,0.26133649638412065,356.9447697294126,100',
+        ),
+        (
+          name: 'steel blue',
+          color: const Color(0xff4682b4),
+          lightness: 58.80009077665625,
+          chroma: 0.09933884428113002,
+          hue: 245.73941223940804,
+          url:
+              'https://oklch.com/#58.80009077665625,0.09933884428113002,245.73941223940804,100',
+        ),
+        (
+          name: 'gold',
+          color: const Color(0xffffd700),
+          lightness: 88.67710734392976,
+          chroma: 0.1821860427566396,
+          hue: 95.3304934870249,
+          url:
+              'https://oklch.com/#88.67710734392976,0.1821860427566396,95.3304934870249,100',
+        ),
+        (
+          name: 'blue violet',
+          color: const Color(0xff8a2be2),
+          lightness: 53.37649508522606,
+          chroma: 0.2503052644516238,
+          hue: 301.3749618367515,
+          url:
+              'https://oklch.com/#53.37649508522606,0.2503052644516238,301.3749618367515,100',
+        ),
+      ];
+
+      for (final sample in samples) {
+        final result = OKLCHColor.fromColor(sample.color);
+
+        expect(
+          result.lightness,
+          closeTo(sample.lightness, 0.001),
+          reason: sample.url,
+        );
+        expect(
+          result.chroma,
+          closeTo(sample.chroma, 0.001),
+          reason: sample.url,
+        );
+        expect(
+          result.hue,
+          closeTo(sample.hue, 0.001),
+          reason: sample.url,
+        );
+      }
+    });
   });
 }
