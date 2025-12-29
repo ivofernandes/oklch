@@ -84,4 +84,66 @@ void main() {
     // Verify with the expected value
     expect(hex, equals('#606060'));
   });
+
+  test('Converts OKLCH to RGB for additional OKLCH.com samples', () {
+    final samples = <({
+      String name,
+      double lightness,
+      double chroma,
+      double hue,
+      String expectedHex,
+      String url,
+    })>[
+      (
+        name: 'deep pink',
+        lightness: 65.49349935138736,
+        chroma: 0.26133649638412065,
+        hue: 356.9447697294126,
+        expectedHex: '#ff1493',
+        url:
+            'https://oklch.com/#65.49349935138736,0.26133649638412065,356.9447697294126,100',
+      ),
+      (
+        name: 'steel blue',
+        lightness: 58.80009077665625,
+        chroma: 0.09933884428113002,
+        hue: 245.73941223940804,
+        expectedHex: '#4682b4',
+        url:
+            'https://oklch.com/#58.80009077665625,0.09933884428113002,245.73941223940804,100',
+      ),
+      (
+        name: 'gold',
+        lightness: 88.67710734392976,
+        chroma: 0.1821860427566396,
+        hue: 95.3304934870249,
+        expectedHex: '#ffd700',
+        url:
+            'https://oklch.com/#88.67710734392976,0.1821860427566396,95.3304934870249,100',
+      ),
+      (
+        name: 'blue violet',
+        lightness: 53.37649508522606,
+        chroma: 0.2503052644516238,
+        hue: 301.3749618367515,
+        expectedHex: '#8a2be2',
+        url:
+            'https://oklch.com/#53.37649508522606,0.2503052644516238,301.3749618367515,100',
+      ),
+    ];
+
+    for (final sample in samples) {
+      final result = OKLCHColor.fromOKLCH(
+        sample.lightness,
+        sample.chroma,
+        sample.hue,
+      );
+
+      expect(
+        result.rgbHex,
+        equals(sample.expectedHex),
+        reason: sample.url,
+      );
+    }
+  });
 }
