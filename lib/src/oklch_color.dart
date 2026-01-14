@@ -49,7 +49,7 @@ class OKLCHColor {
   static const OKLCHColor black = OKLCHColor(0, 0, 0);
 
   /// OKLCH Black
-  static const OKLCHColor white = OKLCHColor(100, 0, 0);
+  static const OKLCHColor white = OKLCHColor(1, 0, 0);
 
   /// [OKLCHColor] to [Color]
   Color toColor() => OKLABColor.fromOKLCH(this).toColor();
@@ -84,7 +84,7 @@ class OKLCHColor {
         (c2.lightness * (1 - color1Percentage));
     final mixA = c1.a * color1Percentage + (c2.a * (1 - color1Percentage));
     final mixB = c1.b * color1Percentage + (c2.b * (1 - color1Percentage));
-    return OKLABColor(mixL * 100, mixA, mixB).toOKLCH();
+    return OKLABColor(mixL, mixA, mixB).toOKLCH();
   }
 
   /// Returns a new [OKLCHColor] that matches this color with the alpha channel

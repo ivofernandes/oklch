@@ -45,7 +45,7 @@ class OKLABColor {
     aCube = double.parse(aCube.toStringAsFixed(_kFractionDigits));
     bCube = double.parse(bCube.toStringAsFixed(_kFractionDigits));
 
-    return OKLABColor(lCube * 100, aCube, bCube); // Multiply L by 100
+    return OKLABColor(lCube, aCube, bCube);
   }
 
   /// Factory constructor to create an OKLABColor instance from given color.
@@ -58,7 +58,7 @@ class OKLABColor {
   factory OKLABColor.fromOKLCH(OKLCHColor color) {
     final a = cos(color.hue * pi / 180) * color.chroma;
     final b = sin(color.hue * pi / 180) * color.chroma;
-    return OKLABColor(color.lightness / 100, a, b); // Normalizing l
+    return OKLABColor(color.lightness, a, b);
   }
 
   /// Lightness component of the OKLAB color model.

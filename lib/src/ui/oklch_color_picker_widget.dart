@@ -63,7 +63,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             'Lightness',
             lightness,
             0,
-            100,
+            1,
             (newValue) {
               setState(() => lightness = newValue);
               _updateColor();
@@ -74,7 +74,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             'Chroma',
             chroma,
             0,
-            128,
+            0.4,
             (newValue) {
               setState(() => chroma = newValue);
               _updateColor();

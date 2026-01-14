@@ -11,7 +11,7 @@ void main() {
       final result = OKLCHColor.fromColor(red);
 
       // Verify with the expected value
-      expect(result.lightness, closeTo(62.795536061455145, 0.001));
+      expect(result.lightness, closeTo(0.6279553606145515, 0.001));
       expect(result.chroma, closeTo(0.25768330773615683, 0.001));
       expect(result.hue, closeTo(29.2338851923426, 0.001));
     });
@@ -22,7 +22,7 @@ void main() {
       final result = OKLCHColor.fromColor(const Color(0xff00ff00));
 
       // Verify with the expected value
-      expect(result.lightness, closeTo(86.64396115356693, 0.001));
+      expect(result.lightness, closeTo(0.8664396115356694, 0.001));
       expect(result.chroma, closeTo(0.2948272403370167, 0.001));
       expect(result.hue, closeTo(142.49533888780996, 0.001));
     });
@@ -33,33 +33,44 @@ void main() {
       final result = OKLCHColor.fromColor(const Color(0xff0000ff));
 
       // Verify with the expected value
-      expect(result.lightness, closeTo(45.201371838534286, 0.001));
+      expect(result.lightness, closeTo(0.45201371838534285, 0.001));
       expect(result.chroma, closeTo(0.31321437166460125, 0.001));
       expect(result.hue, closeTo(264.052020638055, 0.001));
     });
 
     /// Light green color
-    /// https://oklch.com/#70,0.1,160,100
+    /// https://oklch.com/#0.7,0.1,160,100
     test('Converts RGB to OKLCH for light green', () {
       // Test case 4
       final result = OKLCHColor.fromColor(const Color(0xff62b289));
 
       // Verify with the expected value
-      expect(result.lightness, closeTo(70.08459661776736, 0.001));
+      expect(result.lightness, closeTo(0.7008459661776736, 0.001));
       expect(result.chroma, closeTo(0.1, 0.001));
       expect(result.hue, closeTo(159.9277544974, 0.001));
     });
 
     /// White color
-    /// https://oklch.com/#100,0,0,100
+    /// https://oklch.com/#1,0,0,100
     test('Converts RGB to OKLCH for white', () {
       // Test case 5
       final result = OKLCHColor.fromColor(const Color(0xffffffff));
 
       // Verify with the expected value
-      expect(result.lightness, closeTo(100, 0.001));
+      expect(result.lightness, closeTo(1, 0.001));
       expect(result.chroma, closeTo(0, 0.001));
       expect(result.hue, closeTo(0, 0.001));
+    });
+
+    /// Light blue color
+    /// https://oklch.com/#0.7,0.1,263,100
+    test('Converts RGB to OKLCH for light blue', () {
+      final result = OKLCHColor.fromColor(const Color(0xff7d9edd));
+
+      // Verify with the expected value
+      expect(result.lightness, closeTo(0.6996, 0.001));
+      expect(result.chroma, closeTo(0.1001, 0.001));
+      expect(result.hue, closeTo(262.805, 0.01));
     });
   });
 }
