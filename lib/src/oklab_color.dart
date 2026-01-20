@@ -4,9 +4,7 @@ import 'dart:ui';
 import 'package:oklch/src/color_extensions.dart';
 import 'package:oklch/src/oklch_color.dart';
 
-// NOTE: 7 digits seem to fix the arithemic floating point error when doing
-// White RBG to White OKLHC
-const _kFractionDigits = 7;
+const _kHueEpsilon = 1e-7;
 
 /// The OKLABColor class represents colors in the OKLAB color space.
 class OKLABColor {
@@ -23,27 +21,15 @@ class OKLABColor {
     var m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
     var s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
 
-    l = double.parse(l.toStringAsFixed(_kFractionDigits));
-    m = double.parse(m.toStringAsFixed(_kFractionDigits));
-    s = double.parse(s.toStringAsFixed(_kFractionDigits));
-
     // Apply cubic root
     l = _cbrt(l);
     m = _cbrt(m);
     s = _cbrt(s);
 
-    l = double.parse(l.toStringAsFixed(_kFractionDigits));
-    m = double.parse(m.toStringAsFixed(_kFractionDigits));
-    s = double.parse(s.toStringAsFixed(_kFractionDigits));
-
     // Convert LMS to Oklab
     var lCube = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
     var aCube = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
     var bCube = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
-
-    lCube = double.parse(lCube.toStringAsFixed(_kFractionDigits));
-    aCube = double.parse(aCube.toStringAsFixed(_kFractionDigits));
-    bCube = double.parse(bCube.toStringAsFixed(_kFractionDigits));
 
     return OKLABColor(lCube, aCube, bCube);
   }
@@ -84,16 +70,14 @@ class OKLABColor {
   OKLCHColor toOKLCH() {
     final chroma = sqrt(a * a + b * b);
 
-    var hue = atan2(b, a);
-    if (hue < 0) {
-      hue += 2 * pi;
+    var hue = 0.0;
+    if (chroma > _kHueEpsilon) {
+      hue = atan2(b, a);
+      if (hue < 0) {
+        hue += 2 * pi;
+      }
+      hue = hue * 180 / pi;
     }
-
-    if (b == 0) {
-      hue = 0;
-    }
-
-    hue = hue * 180 / pi;
 
     return OKLCHColor(lightness, chroma, hue);
   }

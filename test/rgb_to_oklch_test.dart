@@ -72,5 +72,38 @@ void main() {
       expect(result.chroma, closeTo(0.1001, 0.001));
       expect(result.hue, closeTo(262.805, 0.01));
     });
+
+    /// Magenta color
+    /// https://oklch.com/#0.6893,0.37,328.64,100
+    test('Converts RGB to OKLCH for magenta', () {
+      final result = OKLCHColor.fromColor(const Color(0xffff00ff));
+
+      // Verify with the expected value
+      expect(result.lightness, closeTo(0.7016738559, 0.001));
+      expect(result.chroma, closeTo(0.3224909648, 0.001));
+      expect(result.hue, closeTo(328.3634179, 0.01));
+    });
+
+    /// Vivid blue color
+    /// https://oklch.com/#0.4701,0.2998,265.9,100
+    test('Converts RGB to OKLCH for vivid blue', () {
+      final result = OKLCHColor.fromColor(const Color(0xff1720ff));
+
+      // Verify with the expected value
+      expect(result.lightness, closeTo(0.4705233263, 0.001));
+      expect(result.chroma, closeTo(0.3004162614, 0.001));
+      expect(result.hue, closeTo(265.8898843, 0.01));
+    });
+
+    /// Yellow color
+    /// https://oklch.com/#0.9592,0.2296,112.37,100
+    test('Converts RGB to OKLCH for yellow', () {
+      final result = OKLCHColor.fromColor(const Color(0xfff6ff00));
+
+      // Verify with the expected value
+      expect(result.lightness, closeTo(0.9608534218, 0.001));
+      expect(result.chroma, closeTo(0.2132513665, 0.001));
+      expect(result.hue, closeTo(112.361437, 0.01));
+    });
   });
 }

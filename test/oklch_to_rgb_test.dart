@@ -71,6 +71,36 @@ void main() {
       // Verify with the expected value
       expect(hex, equals('#7d9edd'));
     });
+
+    /// https://oklch.com/#0.6893,0.37,328.64,100
+    /// Magenta color
+    test('Converts OKLCH to RGB magenta', () {
+      final result1 = OKLCHColor.fromOKLCH(0.6893, 0.37, 328.64, 100);
+      final hex = result1.rgbHex;
+
+      // Verify with the expected value
+      expect(hex, equals('#ff00ff'));
+    });
+
+    /// https://oklch.com/#0.4701,0.2998,265.9,100
+    /// Vivid blue color
+    test('Converts OKLCH to RGB vivid blue', () {
+      final result1 = OKLCHColor.fromOKLCH(0.4701, 0.2998, 265.9, 100);
+      final hex = result1.rgbHex;
+
+      // Verify with the expected value
+      expect(hex, equals('#1720ff'));
+    });
+
+    /// https://oklch.com/#0.9592,0.2296,112.37,100
+    /// Yellow color
+    test('Converts OKLCH to RGB yellow', () {
+      final result1 = OKLCHColor.fromOKLCH(0.9592, 0.2296, 112.37, 100);
+      final hex = result1.rgbHex;
+
+      // Verify with the expected value
+      expect(hex, equals('#f6ff00'));
+    });
   });
 
   /// https://oklch.com/#1,0,0,100
