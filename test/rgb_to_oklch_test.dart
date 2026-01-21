@@ -105,5 +105,101 @@ void main() {
       expect(result.chroma, closeTo(0.2132513665, 0.001));
       expect(result.hue, closeTo(112.361437, 0.01));
     });
+
+    void expectOkLch(
+      Color color,
+      double l,
+      double c,
+      double h, {
+      double lightnessTolerance = 0.001,
+      double chromaTolerance = 0.002,
+      double hueTolerance = 0.5,
+    }) {
+      final result = OKLCHColor.fromColor(color);
+
+      expect(result.lightness, closeTo(l, lightnessTolerance));
+      expect(result.chroma, closeTo(c, chromaTolerance));
+      expect(result.hue, closeTo(h, hueTolerance));
+    }
+
+    /// https://oklch.com/#0.4631,0.1547,279.94,100
+    test('Converts RGB to OKLCH for #4c48ac', () {
+      expectOkLch(
+        const Color(0xff4c48ac),
+        0.4631,
+        0.1547,
+        279.94,
+      );
+    });
+
+    /// https://oklch.com/#0.4631,0.0949,346.64,100
+    test('Converts RGB to OKLCH for #7e4163', () {
+      expectOkLch(
+        const Color(0xff7e4163),
+        0.4631,
+        0.0949,
+        346.64,
+      );
+    });
+
+    /// https://oklch.com/#0.4631,0.0974,57.58,100
+    test('Converts RGB to OKLCH for #814918', () {
+      expectOkLch(
+        const Color(0xff814918),
+        0.4631,
+        0.0974,
+        57.58,
+      );
+    });
+
+    /// https://oklch.com/#0.3831,0.0708,17.35,100
+    test('Converts RGB to OKLCH for #643235', () {
+      expectOkLch(
+        const Color(0xff643235),
+        0.3831,
+        0.0708,
+        17.35,
+      );
+    });
+
+    /// https://oklch.com/#0.3831,0.1344,266.17,100
+    test('Converts RGB to OKLCH for #213b8a', () {
+      expectOkLch(
+        const Color(0xff213b8a),
+        0.3831,
+        0.1344,
+        266.17,
+      );
+    });
+
+    /// https://oklch.com/#0.3831,0.0974,340.29,100
+    test('Converts RGB to OKLCH for #642b53', () {
+      expectOkLch(
+        const Color(0xff642b53),
+        0.3831,
+        0.0974,
+        340.29,
+      );
+    });
+
+    /// https://oklch.com/#0.3831,0.085,141.23,100
+    test('Converts RGB to OKLCH for #274e21', () {
+      expectOkLch(
+        const Color(0xff274e21),
+        0.3831,
+        0.085,
+        141.23,
+      );
+    });
+
+    /// https://oklch.com/#0.6831,0.1714,35.35,100
+    test('Converts RGB to OKLCH for #ef6b49', () {
+      expectOkLch(
+        const Color(0xffef6b49),
+        0.6831,
+        0.1714,
+        35.35,
+      );
+    });
   });
 }

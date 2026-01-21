@@ -101,6 +101,44 @@ void main() {
       // Verify with the expected value
       expect(hex, equals('#f6ff00'));
     });
+
+    /// https://oklch.com/#0.4631,0.1547,279.94,100
+    /// https://oklch.com/#0.4631,0.0949,346.64,100
+    /// https://oklch.com/#0.4631,0.0974,57.58,100
+    /// https://oklch.com/#0.3831,0.0708,17.35,100
+    /// https://oklch.com/#0.3831,0.1344,266.17,100
+    /// https://oklch.com/#0.3831,0.0974,340.29,100
+    /// https://oklch.com/#0.3831,0.085,141.23,100
+    /// https://oklch.com/#0.6831,0.147,194.17,100
+    /// https://oklch.com/#0.6831,0.2503,310.64,100
+    /// https://oklch.com/#0.6831,0.1714,35.35,100
+    /// https://oklch.com/#0.6831,0.2306,0,100
+    /// https://oklch.com/#0.6964,0.2306,139.11,100
+    test('Converts OKLCH to RGB for additional colors', () {
+      final cases = <({double l, double c, double h, String hex})>[
+        (l: 0.4631, c: 0.1547, h: 279.94, hex: '#4c48ac'),
+        (l: 0.4631, c: 0.0949, h: 346.64, hex: '#7e4163'),
+        (l: 0.4631, c: 0.0974, h: 57.58, hex: '#814918'),
+        (l: 0.3831, c: 0.0708, h: 17.35, hex: '#643235'),
+        (l: 0.3831, c: 0.1344, h: 266.17, hex: '#213b8a'),
+        (l: 0.3831, c: 0.0974, h: 340.29, hex: '#642b53'),
+        (l: 0.3831, c: 0.085, h: 141.23, hex: '#274e21'),
+        (l: 0.6831, c: 0.1714, h: 35.35, hex: '#ef6b49'),
+        (l: 0.6831, c: 0.2306, h: 0, hex: '#ff4493'),
+        (l: 0.6964, c: 0.2306, h: 139.11, hex: '#3bbc00'),
+      ];
+
+      for (final colorCase in cases) {
+        final result = OKLCHColor.fromOKLCH(
+          colorCase.l,
+          colorCase.c,
+          colorCase.h,
+          100,
+        );
+
+        expect(result.rgbHex, equals(colorCase.hex));
+      }
+    });
   });
 
   /// https://oklch.com/#1,0,0,100
