@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class GradientRectSliderTrackShape extends SliderTrackShape {
-  final List<Color> hueColors;
+  const GradientRectSliderTrackShape(
+    this.colors, {
+    this.borderRadius = const Radius.circular(12),
+  });
 
-  const GradientRectSliderTrackShape(this.hueColors);
+  final List<Color> colors;
+  final Radius borderRadius;
 
   @override
   void paint(
@@ -28,11 +32,14 @@ class GradientRectSliderTrackShape extends SliderTrackShape {
     );
 
     final Gradient gradient = LinearGradient(
-      colors: hueColors,
+      colors: colors,
     );
 
     final paint = Paint()..shader = gradient.createShader(trackRect);
-    context.canvas.drawRect(trackRect, paint);
+    context.canvas.drawRRect(
+      RRect.fromRectAndRadius(trackRect, borderRadius),
+      paint,
+    );
   }
 
   @override
