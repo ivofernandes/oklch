@@ -103,41 +103,167 @@ void main() {
     });
 
     /// https://oklch.com/#0.4631,0.1547,279.94,100
+    test('Converts OKLCH to RGB for #4c48ac', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.4631, 0.1547, 279.94, 100).rgbHex;
+
+      expect(result, equals('#4c48ac'));
+    });
+
     /// https://oklch.com/#0.4631,0.0949,346.64,100
+    test('Converts OKLCH to RGB for #7e4163', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.4631, 0.0949, 346.64, 100).rgbHex;
+
+      expect(result, equals('#7e4163'));
+    });
+
     /// https://oklch.com/#0.4631,0.0974,57.58,100
+    test('Converts OKLCH to RGB for #814918', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.4631, 0.0974, 57.58, 100).rgbHex;
+
+      expect(result, equals('#814918'));
+    });
+
     /// https://oklch.com/#0.3831,0.0708,17.35,100
+    test('Converts OKLCH to RGB for #643235', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.3831, 0.0708, 17.35, 100).rgbHex;
+
+      expect(result, equals('#643235'));
+    });
+
     /// https://oklch.com/#0.3831,0.1344,266.17,100
+    test('Converts OKLCH to RGB for #213b8a', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.3831, 0.1344, 266.17, 100).rgbHex;
+
+      expect(result, equals('#213b8a'));
+    });
+
     /// https://oklch.com/#0.3831,0.0974,340.29,100
+    test('Converts OKLCH to RGB for #642b53', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.3831, 0.0974, 340.29, 100).rgbHex;
+
+      expect(result, equals('#642b53'));
+    });
+
     /// https://oklch.com/#0.3831,0.085,141.23,100
-    /// https://oklch.com/#0.6831,0.147,194.17,100
-    /// https://oklch.com/#0.6831,0.2503,310.64,100
+    test('Converts OKLCH to RGB for #274e21', () {
+      final result = OKLCHColor.fromOKLCH(0.3831, 0.085, 141.23, 100).rgbHex;
+
+      expect(result, equals('#274e21'));
+    });
+
     /// https://oklch.com/#0.6831,0.1714,35.35,100
+    test('Converts OKLCH to RGB for #ef6b49', () {
+      final result = OKLCHColor.fromOKLCH(0.6831, 0.1714, 35.35, 100).rgbHex;
+
+      expect(result, equals('#ef6b49'));
+    });
+
     /// https://oklch.com/#0.6831,0.2306,0,100
+    test('Converts OKLCH to RGB for #ff4493', () {
+      final result = OKLCHColor.fromOKLCH(0.6831, 0.2306, 0, 100).rgbHex;
+
+      expect(result, equals('#ff4493'));
+    });
+
     /// https://oklch.com/#0.6964,0.2306,139.11,100
-    test('Converts OKLCH to RGB for additional colors', () {
-      final cases = <({double l, double c, double h, String hex})>[
-        (l: 0.4631, c: 0.1547, h: 279.94, hex: '#4c48ac'),
-        (l: 0.4631, c: 0.0949, h: 346.64, hex: '#7e4163'),
-        (l: 0.4631, c: 0.0974, h: 57.58, hex: '#814918'),
-        (l: 0.3831, c: 0.0708, h: 17.35, hex: '#643235'),
-        (l: 0.3831, c: 0.1344, h: 266.17, hex: '#213b8a'),
-        (l: 0.3831, c: 0.0974, h: 340.29, hex: '#642b53'),
-        (l: 0.3831, c: 0.085, h: 141.23, hex: '#274e21'),
-        (l: 0.6831, c: 0.1714, h: 35.35, hex: '#ef6b49'),
-        (l: 0.6831, c: 0.2306, h: 0, hex: '#ff4493'),
-        (l: 0.6964, c: 0.2306, h: 139.11, hex: '#3bbc00'),
-      ];
+    test('Converts OKLCH to RGB for #3bbc00', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.6964, 0.2306, 139.11, 100).rgbHex;
 
-      for (final colorCase in cases) {
-        final result = OKLCHColor.fromOKLCH(
-          colorCase.l,
-          colorCase.c,
-          colorCase.h,
-          100,
-        );
+      expect(result, equals('#3bbc00'));
+    });
 
-        expect(result.rgbHex, equals(colorCase.hex));
-      }
+    /// https://oklch.com/#0.4768,0.236,285.78,100
+    test('Converts OKLCH to RGB for #5c2dd7', () {
+      final result = OKLCHColor.fromOKLCH(0.4768, 0.236, 285.78, 100).rgbHex;
+
+      expect(result, equals('#5c2dd7'));
+    });
+
+    /// https://oklch.com/#0.7501,0.236,144.96,100
+    test('Converts OKLCH to RGB for #01d23a', () {
+      final result = OKLCHColor.fromOKLCH(0.7501, 0.236, 144.96, 100).rgbHex;
+
+      expect(result, equals('#01d23a'));
+    });
+
+    /// https://oklch.com/#0.5701,0.236,348.25,100
+    test('Converts OKLCH to RGB for #d0098f', () {
+      final result = OKLCHColor.fromOKLCH(0.5701, 0.236, 348.25, 100).rgbHex;
+
+      expect(result, equals('#d0098f'));
+    });
+
+    /// https://oklch.com/#0.6101,0.236,17.9,100
+    test('Converts OKLCH to RGB for #ef184a', () {
+      final result = OKLCHColor.fromOKLCH(0.6101, 0.236, 17.9, 100).rgbHex;
+
+      expect(result, equals('#ef184a'));
+    });
+
+    /// https://oklch.com/#0.6101,0,17.9,100
+    test('Converts OKLCH to RGB for #838383', () {
+      final result = OKLCHColor.fromOKLCH(0.6101, 0, 17.9, 100).rgbHex;
+
+      expect(result, equals('#838383'));
+    });
+
+    /// https://oklch.com/#0.2244,0,17.9,100
+    test('Converts OKLCH to RGB for #1c1c1c', () {
+      final result = OKLCHColor.fromOKLCH(0.2244, 0, 17.9, 100).rgbHex;
+
+      expect(result, equals('#1c1c1c'));
+    });
+
+    /// https://oklch.com/#0,0,17.9,100
+    test('Converts OKLCH to RGB for #000000', () {
+      final result = OKLCHColor.fromOKLCH(0, 0, 17.9, 100).rgbHex;
+
+      expect(result, equals('#000000'));
+    });
+
+    /// https://oklch.com/#1,0,17.9,100
+    test('Converts OKLCH to RGB for #ffffff at hue 17.9', () {
+      final result = OKLCHColor.fromOKLCH(1, 0, 17.9, 100).rgbHex;
+
+      expect(result, equals('#ffffff'));
+    });
+
+    /// https://oklch.com/#0.7234,0.1529,57.07,100
+    test('Converts OKLCH to RGB for #ec8934', () {
+      final result = OKLCHColor.fromOKLCH(0.7234, 0.1529, 57.07, 100).rgbHex;
+
+      expect(result, equals('#ec8934'));
+    });
+
+    /// https://oklch.com/#0.8034,0.1529,115.31,100
+    test('Converts OKLCH to RGB for #bcca48', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.8034, 0.1529, 115.31, 100).rgbHex;
+
+      expect(result, equals('#bcca48'));
+    });
+
+    /// https://oklch.com/#0.6234,0.1529,259.31,100
+    test('Converts OKLCH to RGB for #4b85e2', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.6234, 0.1529, 259.31, 100).rgbHex;
+
+      expect(result, equals('#4b85e2'));
+    });
+
+    /// https://oklch.com/#0.5101,0.1529,328.13,100
+    test('Converts OKLCH to RGB for #933f91', () {
+      final result =
+          OKLCHColor.fromOKLCH(0.5101, 0.1529, 328.13, 100).rgbHex;
+
+      expect(result, equals('#933f91'));
     });
   });
 
