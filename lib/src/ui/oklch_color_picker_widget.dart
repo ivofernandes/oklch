@@ -10,6 +10,8 @@ class OKLCHColorPickerWidget extends StatefulWidget {
   const OKLCHColorPickerWidget({
     required this.color,
     required this.onColorChanged,
+    this.labels = const OKLCHColorPickerLabels(),
+    this.spacing = const OKLCHColorPickerSpacing(),
     this.hueColors = const [
       Colors.red,
       Colors.orange,
@@ -29,12 +31,72 @@ class OKLCHColorPickerWidget extends StatefulWidget {
   /// Callback for when the color changes
   final ValueChanged<Color> onColorChanged;
 
+  /// Labels and helper copy used throughout the widget.
+  final OKLCHColorPickerLabels labels;
+
+  /// Spacing values used within the widget layout.
+  final OKLCHColorPickerSpacing spacing;
+
   /// List of colors to use for the hue slider
   final List<Color> hueColors;
 
   @override
   State<OKLCHColorPickerWidget> createState() =>
       _OKLCHColorPickerWidgetState();
+}
+
+/// Copy strings displayed throughout [OKLCHColorPickerWidget].
+class OKLCHColorPickerLabels {
+  const OKLCHColorPickerLabels({
+    this.previewTitle = 'Selected Color',
+    this.lightnessLabel = 'Lightness',
+    this.lightnessDescription = 'Shift from deep shadow to bright highlight.',
+    this.chromaLabel = 'Chroma',
+    this.chromaDescription = 'Control how vivid the color feels.',
+    this.hueLabel = 'Hue',
+    this.hueDescription = 'Rotate through the color spectrum.',
+    this.oklchChipLabel = 'OKLCH',
+    this.hexChipLabel = 'Hex',
+    this.helperText = 'Drag the sliders or tap the gradient to dial in a color.',
+  });
+
+  final String previewTitle;
+  final String lightnessLabel;
+  final String lightnessDescription;
+  final String chromaLabel;
+  final String chromaDescription;
+  final String hueLabel;
+  final String hueDescription;
+  final String oklchChipLabel;
+  final String hexChipLabel;
+  final String helperText;
+}
+
+/// Spacing values used throughout [OKLCHColorPickerWidget].
+class OKLCHColorPickerSpacing {
+  const OKLCHColorPickerSpacing({
+    this.previewHeight = 120,
+    this.previewRadius = 18,
+    this.previewBottom = 16,
+    this.sectionGap = 12,
+    this.descriptionGap = 4,
+    this.sliderGap = 8,
+    this.chipSectionGap = 16,
+    this.chipSpacing = 10,
+    this.chipRunSpacing = 10,
+    this.helperTextTop = 6,
+  });
+
+  final double previewHeight;
+  final double previewRadius;
+  final double previewBottom;
+  final double sectionGap;
+  final double descriptionGap;
+  final double sliderGap;
+  final double chipSectionGap;
+  final double chipSpacing;
+  final double chipRunSpacing;
+  final double helperTextTop;
 }
 
 class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
@@ -81,9 +143,9 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 160,
+          height: widget.spacing.previewHeight,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(widget.spacing.previewRadius),
             color: previewColor,
             boxShadow: [
               BoxShadow(
@@ -95,7 +157,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
           ),
           child: Center(
             child: Text(
-              'Selected Color',
+              widget.labels.previewTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 color: theme.colorScheme.onPrimary,
                 fontWeight: FontWeight.w600,
@@ -103,10 +165,10 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: widget.spacing.previewBottom),
         _buildSlider(
-          label: 'Lightness',
-          description: 'Shift from deep shadow to bright highlight.',
+          label: widget.labels.lightnessLabel,
+          description: widget.labels.lightnessDescription,
           value: lightness,
           min: _minLightness,
           max: _maxLightness,
@@ -120,10 +182,10 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             channel: _OKLCHChannel.lightness,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: widget.spacing.sectionGap),
         _buildSlider(
-          label: 'Chroma',
-          description: 'Control how vivid the color feels.',
+          label: widget.labels.chromaLabel,
+          description: widget.labels.chromaDescription,
           value: chroma,
           min: _minChroma,
           max: _maxChroma,
@@ -137,10 +199,10 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             channel: _OKLCHChannel.chroma,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: widget.spacing.sectionGap),
         _buildSlider(
-          label: 'Hue',
-          description: 'Rotate through the color spectrum.',
+          label: widget.labels.hueLabel,
+          description: widget.labels.hueDescription,
           value: hue,
           min: _minHue,
           max: _maxHue,
@@ -150,25 +212,25 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             channel: _OKLCHChannel.hue,
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: widget.spacing.chipSectionGap),
         Wrap(
-          spacing: 12,
-          runSpacing: 12,
+          spacing: widget.spacing.chipSpacing,
+          runSpacing: widget.spacing.chipRunSpacing,
           children: [
             _ValueChip(
-              label: 'OKLCH',
+              label: widget.labels.oklchChipLabel,
               value:
                   '(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)})',
             ),
             _ValueChip(
-              label: 'Hex',
+              label: widget.labels.hexChipLabel,
               value: OKLCHColor.fromOKLCH(lightness, chroma, hue).rgbHex,
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: widget.spacing.helperTextTop),
         Text(
-          'Drag the sliders or tap the gradient to dial in a color.',
+          widget.labels.helperText,
           style: helperStyle,
         ),
       ],
@@ -205,14 +267,14 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: widget.spacing.descriptionGap),
         Text(
           description,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurface.withOpacity(0.7),
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: widget.spacing.sliderGap),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             trackHeight: 12,

@@ -14,5 +14,10 @@ Improved documentation, fix conversion iteration
 
 FIX: floating point arithmetic error seen on White RBG to White OKLCH
 FEAT: OKLABColor
-FEAT: OKLCH color mix method 
+FEAT: OKLCH color mix method
 FEAT: add very good analysis
+
+# 1.0.0
+
+Extensive testing and validation
+New color picker widget
