@@ -17,19 +17,14 @@ class OKLABColor {
 
   factory OKLABColor._fromLinearRGB(double r, double g, double b) {
     // Convert linear RGB to LMS
-    var l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
-    var m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
-    var s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
-
-    // Apply cubic root
-    l = _cbrt(l);
-    m = _cbrt(m);
-    s = _cbrt(s);
+    final l = _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    final m = _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    final s = _cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
 
     // Convert LMS to Oklab
-    var lCube = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
-    var aCube = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
-    var bCube = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+    final lCube = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+    final aCube = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+    final bCube = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
 
     return OKLABColor(lCube, aCube, bCube);
   }

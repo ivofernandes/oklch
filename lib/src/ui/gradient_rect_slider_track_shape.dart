@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// Slider track shape that renders a rounded rectangle with a gradient fill.
 class GradientRectSliderTrackShape extends SliderTrackShape {
+  /// Creates a gradient track shape for sliders.
   const GradientRectSliderTrackShape(
     this.colors, {
     this.borderRadius = const Radius.circular(12),
   });
 
+  /// Colors used to build the linear gradient across the track.
   final List<Color> colors;
+
+  /// Border radius applied to the gradient track.
   final Radius borderRadius;
 
   @override

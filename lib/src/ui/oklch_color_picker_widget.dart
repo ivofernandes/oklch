@@ -47,6 +47,8 @@ class OKLCHColorPickerWidget extends StatefulWidget {
 
 /// Copy strings displayed throughout [OKLCHColorPickerWidget].
 class OKLCHColorPickerLabels {
+
+  /// Constructor for OKLCHColorPickerLabels
   const OKLCHColorPickerLabels({
     this.previewTitle = 'Selected Color',
     this.lightnessLabel = 'Lightness',
@@ -60,20 +62,41 @@ class OKLCHColorPickerLabels {
     this.helperText = 'Drag the sliders or tap the gradient to dial in a color.',
   });
 
+  /// Title displayed in the color preview area.
   final String previewTitle;
+
+  /// Label for the lightness slider.
   final String lightnessLabel;
+
+  /// Description for the lightness slider.
   final String lightnessDescription;
+
+  /// Label for the chroma slider.
   final String chromaLabel;
+
+  /// Description for the chroma slider.
   final String chromaDescription;
+
+  /// Label for the hue slider.
   final String hueLabel;
+
+  /// Description for the hue slider.
   final String hueDescription;
+
+  /// Label for the OKLCH value chip.
   final String oklchChipLabel;
+
+  /// Label for the Hex value chip.
   final String hexChipLabel;
+
+  /// Helper text displayed at the bottom of the widget.
   final String helperText;
 }
 
 /// Spacing values used throughout [OKLCHColorPickerWidget].
 class OKLCHColorPickerSpacing {
+
+  /// Constructor for OKLCHColorPickerSpacing
   const OKLCHColorPickerSpacing({
     this.previewHeight = 120,
     this.previewRadius = 18,
@@ -87,15 +110,34 @@ class OKLCHColorPickerSpacing {
     this.helperTextTop = 6,
   });
 
+  /// Height of the color preview area.
   final double previewHeight;
+
+  /// Border radius of the color preview area.
   final double previewRadius;
+
+  /// Bottom margin below the color preview area.
   final double previewBottom;
+
+  /// Vertical gap between sections.
   final double sectionGap;
+
+  /// Vertical gap between label and description.
   final double descriptionGap;
+
+  /// Vertical gap between description and slider.
   final double sliderGap;
+
+  /// Vertical gap before the value chips section.
   final double chipSectionGap;
+
+  /// Horizontal spacing between value chips.
   final double chipSpacing;
+
+  /// Vertical spacing between value chip rows.
   final double chipRunSpacing;
+
+  /// Top margin above the helper text.
   final double helperTextTop;
 }
 
@@ -107,14 +149,11 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   static const double _minHue = 0;
   static const double _maxHue = 360;
 
-  /// Lightness component of the OKLCH color model
-  late double lightness;
+  late double _lightness;
 
-  /// Chroma component, indicating the color intensity or purity
-  late double chroma;
+  late double _chroma;
 
-  /// Hue component, defining the type of color (like blue, green, etc.)
-  late double hue;
+  late double _hue;
 
   @override
   void initState() {
@@ -134,9 +173,10 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final previewColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).toColor();
+    final previewColor =
+        OKLCHColor.fromOKLCH(_lightness, _chroma, _hue).toColor();
     final helperStyle = theme.textTheme.bodySmall?.copyWith(
-      color: theme.colorScheme.onSurface.withOpacity(0.7),
+      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
     );
 
     return Column(
@@ -149,7 +189,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             color: previewColor,
             boxShadow: [
               BoxShadow(
-                color: previewColor.withOpacity(0.35),
+                color: previewColor.withValues(alpha: 0.35),
                 blurRadius: 24,
                 offset: const Offset(0, 12),
               ),
@@ -169,13 +209,13 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         _buildSlider(
           label: widget.labels.lightnessLabel,
           description: widget.labels.lightnessDescription,
-          value: lightness,
+          value: _lightness,
           min: _minLightness,
           max: _maxLightness,
           gradientColors: _gradientSamples(
             start: 0.05,
             end: 0.95,
-            builder: (value) => OKLCHColor(value, chroma, hue).toColor(),
+            builder: (value) => OKLCHColor(value, _chroma, _hue).toColor(),
           ),
           onChanged: (newValue) => _updateChannel(
             value: newValue,
@@ -186,13 +226,13 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         _buildSlider(
           label: widget.labels.chromaLabel,
           description: widget.labels.chromaDescription,
-          value: chroma,
+          value: _chroma,
           min: _minChroma,
           max: _maxChroma,
           gradientColors: _gradientSamples(
             start: _minChroma,
             end: _maxChroma,
-            builder: (value) => OKLCHColor(lightness, value, hue).toColor(),
+            builder: (value) => OKLCHColor(_lightness, value, _hue).toColor(),
           ),
           onChanged: (newValue) => _updateChannel(
             value: newValue,
@@ -203,7 +243,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         _buildSlider(
           label: widget.labels.hueLabel,
           description: widget.labels.hueDescription,
-          value: hue,
+          value: _hue,
           min: _minHue,
           max: _maxHue,
           gradientColors: widget.hueColors,
@@ -220,11 +260,11 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             _ValueChip(
               label: widget.labels.oklchChipLabel,
               value:
-                  '(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)})',
+                  '(${_lightness.toStringAsFixed(2)}, ${_chroma.toStringAsFixed(2)}, ${_hue.toStringAsFixed(2)})',
             ),
             _ValueChip(
               label: widget.labels.hexChipLabel,
-              value: OKLCHColor.fromOKLCH(lightness, chroma, hue).rgbHex,
+              value: OKLCHColor.fromOKLCH(_lightness, _chroma, _hue).rgbHex,
             ),
           ],
         ),
@@ -262,7 +302,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
             Text(
               value.toStringAsFixed(2),
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -271,7 +311,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         Text(
           description,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         SizedBox(height: widget.spacing.sliderGap),
@@ -294,15 +334,15 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   }
 
   void _updateColor() {
-    final newColor = OKLCHColor.fromOKLCH(lightness, chroma, hue).toColor();
+    final newColor = OKLCHColor.fromOKLCH(_lightness, _chroma, _hue).toColor();
     widget.onColorChanged(newColor);
   }
 
   void _syncFromColor(Color color) {
     final oklch = OKLCHColor.fromColor(color);
-    lightness = oklch.lightness;
-    chroma = oklch.chroma;
-    hue = oklch.hue;
+    _lightness = oklch.lightness;
+    _chroma = oklch.chroma;
+    _hue = oklch.hue;
   }
 
   void _updateChannel({
@@ -312,14 +352,11 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
     setState(() {
       switch (channel) {
         case _OKLCHChannel.lightness:
-          lightness = value;
-          break;
+          _lightness = value;
         case _OKLCHChannel.chroma:
-          chroma = value;
-          break;
+          _chroma = value;
         case _OKLCHChannel.hue:
-          hue = value;
-          break;
+          _hue = value;
       }
     });
     _updateColor();
@@ -359,9 +396,9 @@ class _ValueChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(999),
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.6),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
         border: Border.all(
-          color: theme.colorScheme.onSurface.withOpacity(0.1),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -377,7 +414,7 @@ class _ValueChip extends StatelessWidget {
           Text(
             value,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
