@@ -98,16 +98,16 @@ class OKLCHColorPickerSpacing {
 
   /// Constructor for OKLCHColorPickerSpacing
   const OKLCHColorPickerSpacing({
-    this.previewHeight = 120,
+    this.previewHeight = 84,
     this.previewRadius = 18,
-    this.previewBottom = 16,
+    this.previewBottom = 12,
     this.sectionGap = 12,
-    this.descriptionGap = 4,
-    this.sliderGap = 8,
-    this.chipSectionGap = 16,
+    this.descriptionGap = 2,
+    this.sliderGap = 6,
+    this.chipSectionGap = 12,
     this.chipSpacing = 10,
     this.chipRunSpacing = 10,
-    this.helperTextTop = 6,
+    this.helperTextTop = 8,
   });
 
   /// Height of the color preview area.
@@ -317,10 +317,10 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
         SizedBox(height: widget.spacing.sliderGap),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            trackHeight: 12,
+            trackHeight: 10,
             trackShape: GradientRectSliderTrackShape(gradientColors),
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-            overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
           ),
           child: Slider(
             value: value,

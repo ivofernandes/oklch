@@ -226,67 +226,28 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          TextFormField(
-                            controller: rgbController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              labelText: 'RGB Value',
-                              filled: true,
+                          _ValueRow(
+                            label: 'RGB',
+                            value: rgbController.text,
+                            onCopy: () => Clipboard.setData(
+                              ClipboardData(text: rgbController.text),
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          TextFormField(
-                            controller: oklchController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              labelText: 'OKLCH Value',
-                              filled: true,
+                          const SizedBox(height: 8),
+                          _ValueRow(
+                            label: 'OKLCH',
+                            value: oklchController.text,
+                            onCopy: () => Clipboard.setData(
+                              ClipboardData(text: oklchController.text),
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          TextFormField(
-                            controller: hexController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Hex Value',
-                              filled: true,
+                          const SizedBox(height: 8),
+                          _ValueRow(
+                            label: 'Hex',
+                            value: hexController.text,
+                            onCopy: () => Clipboard.setData(
+                              ClipboardData(text: hexController.text),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: [
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.copy),
-                                label: const Text('Copy RGB'),
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(text: rgbController.text),
-                                  );
-                                },
-                              ),
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.copy),
-                                label: const Text('Copy OKLCH'),
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(
-                                      text: oklchController.text,
-                                    ),
-                                  );
-                                },
-                              ),
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.copy),
-                                label: const Text('Copy Hex'),
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(text: hexController.text),
-                                  );
-                                },
-                              ),
-                            ],
                           ),
                         ],
                       ),
@@ -297,6 +258,74 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ValueRow extends StatelessWidget {
+  const _ValueRow({
+    required this.label,
+    required this.value,
+    required this.onCopy,
+  });
+
+  final String label;
+  final String value;
+  final VoidCallback onCopy;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        border: Border.all(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+        ),
+      ),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.copy, size: 18),
+            tooltip: 'Copy $label',
+            onPressed: () {
+              onCopy();
+
+              final messenger = ScaffoldMessenger.maybeOf(context);
+              if (messenger == null) return;
+
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text('Copied $label'),
+                    duration: const Duration(milliseconds: 900),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+            },
+          ),
+        ],
       ),
     );
   }
