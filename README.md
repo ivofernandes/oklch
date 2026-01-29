@@ -9,6 +9,8 @@ This website was used as reference during the development of this package: https
 Note that this package is not giving the same results than the website, but should evolve to give the same results in
 the future.
 
+![OKLCH](https://raw.githubusercontent.com/ivofernandes/oklch/main/doc/simulator_screenshot_1.png?raw=true)
+
 ## Features
 
 - [x] Convert RGB to OKLCH

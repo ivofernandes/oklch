@@ -50,6 +50,7 @@ class _MyAppState extends State<MyApp> {
       title: 'OKLCH Color Picker Example',
       theme: lightTheme,
       darkTheme: darkTheme,
+      debugShowCheckedModeBanner: false,
       themeMode: _themeMode,
       home: ColorPickerDemo(
         isDarkMode: _themeMode == ThemeMode.dark,
