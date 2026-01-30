@@ -21,7 +21,8 @@ class _MyAppState extends State<MyApp> {
 
   void _toggleTheme() {
     setState(() {
-      _themeMode = _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      _themeMode =
+          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     });
   }
 
@@ -76,9 +77,17 @@ class GradientSliderTrackShape extends SliderTrackShape {
     bool isDiscrete = false,
   }) {
     final trackHeight = sliderTheme.trackHeight ?? 2.0;
-    final trackLeft = offset.dx + (sliderTheme.thumbShape?.getPreferredSize(isEnabled, isDiscrete).width ?? 0) / 2;
-    final trackWidth =
-        parentBox.size.width - (sliderTheme.thumbShape?.getPreferredSize(isEnabled, isDiscrete).width ?? 0);
+    final trackLeft = offset.dx +
+        (sliderTheme.thumbShape
+                    ?.getPreferredSize(isEnabled, isDiscrete)
+                    .width ??
+                0) /
+            2;
+    final trackWidth = parentBox.size.width -
+        (sliderTheme.thumbShape
+                ?.getPreferredSize(isEnabled, isDiscrete)
+                .width ??
+            0);
     final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
@@ -166,7 +175,9 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
         centerTitle: false,
         actions: [
           IconButton(
-            tooltip: widget.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode',
+            tooltip: widget.isDarkMode
+                ? 'Switch to light mode'
+                : 'Switch to dark mode',
             icon: Icon(
               widget.isDarkMode ? Icons.light_mode : Icons.dark_mode,
             ),
@@ -282,7 +293,8 @@ class _ValueRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        color:
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
         border: Border.all(
           color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
         ),

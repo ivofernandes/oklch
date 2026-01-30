@@ -41,13 +41,11 @@ class OKLCHColorPickerWidget extends StatefulWidget {
   final List<Color> hueColors;
 
   @override
-  State<OKLCHColorPickerWidget> createState() =>
-      _OKLCHColorPickerWidgetState();
+  State<OKLCHColorPickerWidget> createState() => _OKLCHColorPickerWidgetState();
 }
 
 /// Copy strings displayed throughout [OKLCHColorPickerWidget].
 class OKLCHColorPickerLabels {
-
   /// Constructor for OKLCHColorPickerLabels
   const OKLCHColorPickerLabels({
     this.previewTitle = 'Selected Color',
@@ -59,7 +57,8 @@ class OKLCHColorPickerLabels {
     this.hueDescription = 'Rotate through the color spectrum.',
     this.oklchChipLabel = 'OKLCH',
     this.hexChipLabel = 'Hex',
-    this.helperText = 'Drag the sliders or tap the gradient to dial in a color.',
+    this.helperText =
+        'Drag the sliders or tap the gradient to dial in a color.',
   });
 
   /// Title displayed in the color preview area.
@@ -95,7 +94,6 @@ class OKLCHColorPickerLabels {
 
 /// Spacing values used throughout [OKLCHColorPickerWidget].
 class OKLCHColorPickerSpacing {
-
   /// Constructor for OKLCHColorPickerSpacing
   const OKLCHColorPickerSpacing({
     this.previewHeight = 84,

@@ -92,7 +92,8 @@ void main() {
 
   group('GradientRectSliderTrackShape', () {
     test('getPreferredRect matches parent size and track height', () {
-      const trackShape = GradientRectSliderTrackShape([Colors.red, Colors.blue]);
+      const trackShape =
+          GradientRectSliderTrackShape([Colors.red, Colors.blue]);
       final parentBox = _TestRenderBox(const Size(200, 40));
 
       final rect = trackShape.getPreferredRect(

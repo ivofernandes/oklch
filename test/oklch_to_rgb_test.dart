@@ -104,48 +104,42 @@ void main() {
 
     /// https://oklch.com/#0.4631,0.1547,279.94,100
     test('Converts OKLCH to RGB for #4c48ac', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.4631, 0.1547, 279.94, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.4631, 0.1547, 279.94, 100).rgbHex;
 
       expect(result, equals('#4c48ac'));
     });
 
     /// https://oklch.com/#0.4631,0.0949,346.64,100
     test('Converts OKLCH to RGB for #7e4163', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.4631, 0.0949, 346.64, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.4631, 0.0949, 346.64, 100).rgbHex;
 
       expect(result, equals('#7e4163'));
     });
 
     /// https://oklch.com/#0.4631,0.0974,57.58,100
     test('Converts OKLCH to RGB for #814918', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.4631, 0.0974, 57.58, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.4631, 0.0974, 57.58, 100).rgbHex;
 
       expect(result, equals('#814918'));
     });
 
     /// https://oklch.com/#0.3831,0.0708,17.35,100
     test('Converts OKLCH to RGB for #643235', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.3831, 0.0708, 17.35, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.3831, 0.0708, 17.35, 100).rgbHex;
 
       expect(result, equals('#643235'));
     });
 
     /// https://oklch.com/#0.3831,0.1344,266.17,100
     test('Converts OKLCH to RGB for #213b8a', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.3831, 0.1344, 266.17, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.3831, 0.1344, 266.17, 100).rgbHex;
 
       expect(result, equals('#213b8a'));
     });
 
     /// https://oklch.com/#0.3831,0.0974,340.29,100
     test('Converts OKLCH to RGB for #642b53', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.3831, 0.0974, 340.29, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.3831, 0.0974, 340.29, 100).rgbHex;
 
       expect(result, equals('#642b53'));
     });
@@ -173,8 +167,7 @@ void main() {
 
     /// https://oklch.com/#0.6964,0.2306,139.11,100
     test('Converts OKLCH to RGB for #3bbc00', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.6964, 0.2306, 139.11, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.6964, 0.2306, 139.11, 100).rgbHex;
 
       expect(result, equals('#3bbc00'));
     });
@@ -244,24 +237,21 @@ void main() {
 
     /// https://oklch.com/#0.8034,0.1529,115.31,100
     test('Converts OKLCH to RGB for #bcca48', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.8034, 0.1529, 115.31, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.8034, 0.1529, 115.31, 100).rgbHex;
 
       expect(result, equals('#bcca48'));
     });
 
     /// https://oklch.com/#0.6234,0.1529,259.31,100
     test('Converts OKLCH to RGB for #4b85e2', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.6234, 0.1529, 259.31, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.6234, 0.1529, 259.31, 100).rgbHex;
 
       expect(result, equals('#4b85e2'));
     });
 
     /// https://oklch.com/#0.5101,0.1529,328.13,100
     test('Converts OKLCH to RGB for #933f91', () {
-      final result =
-          OKLCHColor.fromOKLCH(0.5101, 0.1529, 328.13, 100).rgbHex;
+      final result = OKLCHColor.fromOKLCH(0.5101, 0.1529, 328.13, 100).rgbHex;
 
       expect(result, equals('#933f91'));
     });
