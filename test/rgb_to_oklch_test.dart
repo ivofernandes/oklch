@@ -3,6 +3,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:oklch/oklch.dart';
 
 void main() {
+  void expectOkLch(
+    Color color,
+    double l,
+    double c,
+    double h, {
+    double alpha = 1,
+    double lightnessTolerance = 0.001,
+    double chromaTolerance = 0.002,
+    double hueTolerance = 0.5,
+    double alphaTolerance = 0.001,
+  }) {
+    final result = OKLCHColor.fromColor(color);
+
+    expect(result.lightness, closeTo(l, lightnessTolerance));
+    expect(result.chroma, closeTo(c, chromaTolerance));
+    expect(result.hue, closeTo(h, hueTolerance));
+    expect(result.alpha, closeTo(alpha, alphaTolerance));
+  }
+
+  void expectOkLchNeutral(
+    Color color,
+    double l, {
+    double lightnessTolerance = 0.003,
+    double chromaTolerance = 0.002,
+  }) {
+    final result = OKLCHColor.fromColor(color);
+
+    expect(result.lightness, closeTo(l, lightnessTolerance));
+    expect(result.chroma, closeTo(0, chromaTolerance));
+    expect(result.hue, closeTo(0, 0.001));
+  }
+
   group('RGB to OKLCH conversion tests', () {
     /// Red color
     test('Converts RGB to OKLCH for red', () {
@@ -105,35 +137,6 @@ void main() {
       expect(result.chroma, closeTo(0.2132513665, 0.001));
       expect(result.hue, closeTo(112.361437, 0.01));
     });
-
-    void expectOkLch(
-      Color color,
-      double l,
-      double c,
-      double h, {
-      double lightnessTolerance = 0.001,
-      double chromaTolerance = 0.002,
-      double hueTolerance = 0.5,
-    }) {
-      final result = OKLCHColor.fromColor(color);
-
-      expect(result.lightness, closeTo(l, lightnessTolerance));
-      expect(result.chroma, closeTo(c, chromaTolerance));
-      expect(result.hue, closeTo(h, hueTolerance));
-    }
-
-    void expectOkLchNeutral(
-      Color color,
-      double l, {
-      double lightnessTolerance = 0.003,
-      double chromaTolerance = 0.002,
-    }) {
-      final result = OKLCHColor.fromColor(color);
-
-      expect(result.lightness, closeTo(l, lightnessTolerance));
-      expect(result.chroma, closeTo(0, chromaTolerance));
-      expect(result.hue, closeTo(0, 0.001));
-    }
 
     /// https://oklch.com/#0.4631,0.1547,279.94,100
     test('Converts RGB to OKLCH for #4c48ac', () {
@@ -325,6 +328,40 @@ void main() {
         0.1529,
         328.13,
       );
+    });
+  });
+
+  /// Transparency
+  group('Respects transparency during conversion', () {
+    /// https://oklch.com/#0,0,0,90
+    test('for large values', () {
+      expectOkLch(
+        const Color(0xE6000000),
+        0,
+        0,
+        0,
+        alpha: 0.9,
+        alphaTolerance: 0.01,
+      );
+    });
+
+    /// https://oklch.com/#0,0,0,5
+    test('for small values', () {
+      expectOkLch(
+        const Color(0x0D000000),
+        0,
+        0,
+        0,
+        alpha: 0.05,
+      );
+    });
+
+    test('round-trip RGB -> OKLCH -> RGB', () {
+      const Color input = Color.fromARGB(125, 0, 0, 0);
+      final oklch = OKLCHColor.fromColor(input);
+      final output = oklch.toColor();
+
+      expect(output, equals(input));
     });
   });
 }

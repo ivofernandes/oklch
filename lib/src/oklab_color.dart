@@ -12,10 +12,16 @@ class OKLABColor {
   const OKLABColor(
     this.lightness,
     this.greenRed,
-    this.blueYellow,
-  );
+    this.blueYellow, [
+    this.alpha = 1,
+  ]);
 
-  factory OKLABColor._fromLinearRGB(double r, double g, double b) {
+  factory OKLABColor._fromLinearRGB(
+    double r,
+    double g,
+    double b, [
+    double alpha = 1,
+  ]) {
     // Convert linear RGB to LMS
     final l = _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
     final m = _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
@@ -26,20 +32,20 @@ class OKLABColor {
     final aCube = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
     final bCube = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
 
-    return OKLABColor(lCube, aCube, bCube);
+    return OKLABColor(lCube, aCube, bCube, alpha);
   }
 
   /// Factory constructor to create an OKLABColor instance from given color.
   factory OKLABColor.fromColor(Color color) {
     final (r, g, b) = color.toLinearRGB();
-    return OKLABColor._fromLinearRGB(r, g, b);
+    return OKLABColor._fromLinearRGB(r, g, b, color.a);
   }
 
   /// Factory constructor to create an OKLABColor instance from given OKLCHColor.
   factory OKLABColor.fromOKLCH(OKLCHColor color) {
     final a = cos(color.hue * pi / 180) * color.chroma;
     final b = sin(color.hue * pi / 180) * color.chroma;
-    return OKLABColor(color.lightness, a, b);
+    return OKLABColor(color.lightness, a, b, color.alpha);
   }
 
   /// Lightness component of the OKLAB color model.
@@ -51,6 +57,9 @@ class OKLABColor {
   /// Blue and Yellow component of the OKLAB color model.
   final double blueYellow;
 
+  /// Alpha component of the color, representing its opacity.
+  final double alpha;
+
   /// Alias for the Green and Red component of the OKLAB color model.
   double get a => greenRed;
 
@@ -59,7 +68,7 @@ class OKLABColor {
 
   @override
   String toString() =>
-      'OKLAB(lightness: $lightness, greenRed: $a, blueYellow: $b)';
+      'OKLAB(lightness: $lightness, greenRed: $a, blueYellow: $b, alpha: $alpha)';
 
   /// [OKLABColor] to [OKLCHColor]
   OKLCHColor toOKLCH() {
@@ -74,7 +83,7 @@ class OKLABColor {
       hue = hue * 180 / pi;
     }
 
-    return OKLCHColor(lightness, chroma, hue);
+    return OKLCHColor(lightness, chroma, hue, alpha);
   }
 
   /// [OKLABColor] to [Color]
@@ -84,7 +93,7 @@ class OKLABColor {
       _gammaCorrect(r.clamp(0, 1)),
       _gammaCorrect(g.clamp(0, 1)),
       _gammaCorrect(b.clamp(0, 1)),
-      1,
+      alpha.clamp(0, 1),
     );
   }
 
