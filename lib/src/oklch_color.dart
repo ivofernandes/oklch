@@ -16,7 +16,7 @@ class OKLCHColor {
   /// Factory constructor that creates an OKLCHColor instance from a Flutter Color object.
   /// Converts RGB values to OKLCH.
   factory OKLCHColor.fromColor(Color color) =>
-      OKLABColor.fromColor(color).toOKLCH();
+      OKLABColor.fromColor(color).toOKLCH().withOpacity(color.a);
 
   /// Factory constructor to create an OKLCHColor instance from given OKLCH values.
   /// Optionally, an alpha value can be specified.
@@ -43,7 +43,7 @@ class OKLCHColor {
 
   @override
   String toString() =>
-      'OKLCH(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)})';
+      'OKLCH(${lightness.toStringAsFixed(2)}, ${chroma.toStringAsFixed(2)}, ${hue.toStringAsFixed(2)} / ${(alpha * 100).toStringAsFixed(0)}%)';
 
   /// OKLCH Black
   static const OKLCHColor black = OKLCHColor(0, 0, 0);

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:oklch/oklch.dart';
 
@@ -277,5 +279,39 @@ void main() {
 
     // Verify with the expected value
     expect(hex, equals('#606060'));
+  });
+  /// Transparency
+  group('Respects transparency during conversion', (){
+
+  /// https://oklch.com/#0,0,0,90
+    test('for large values', () {
+      // Test case 7
+      final result1 = OKLCHColor.fromOKLCH(0, 0, 0, 0.9);
+      final alpha = result1.alpha;
+
+      // Verify with the expected value
+      expect(alpha, equals(0.9));
+    });
+
+  /// https://oklch.com/#0,0,0,5
+    test('for small values', () {
+      // Test case 8
+      final result1 = OKLCHColor.fromOKLCH(0, 0, 0, 0.05);
+      final alpha = result1.alpha;
+
+      // Verify with the expected value
+      expect(alpha, equals(0.05));
+    });
+
+    test('round-trip OKLCH -> RGB -> OKLCH', (){
+      final OKLCHColor input = OKLCHColor.fromOKLCH(0, 0, 0, 0.5);
+      final Color intermediate = input.toColor();
+      final OKLCHColor output = OKLCHColor.fromColor(intermediate);
+
+      expect(output.lightness, equals(input.lightness));
+      expect(output.chroma, equals(input.chroma));
+      expect(output.hue, equals(input.hue));
+      expect(output.alpha, equals(input.alpha));
+    });
   });
 }
