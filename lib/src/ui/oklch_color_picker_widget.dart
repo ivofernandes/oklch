@@ -153,6 +153,8 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
 
   late double _hue;
 
+  late double _alpha;
+
   @override
   void initState() {
     super.initState();
@@ -172,7 +174,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final previewColor =
-        OKLCHColor.fromOKLCH(_lightness, _chroma, _hue).toColor();
+        OKLCHColor.fromOKLCH(_lightness, _chroma, _hue, _alpha).toColor();
     final helperStyle = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
     );
@@ -332,7 +334,8 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
   }
 
   void _updateColor() {
-    final newColor = OKLCHColor.fromOKLCH(_lightness, _chroma, _hue).toColor();
+    final newColor =
+        OKLCHColor.fromOKLCH(_lightness, _chroma, _hue, _alpha).toColor();
     widget.onColorChanged(newColor);
   }
 
@@ -341,6 +344,7 @@ class _OKLCHColorPickerWidgetState extends State<OKLCHColorPickerWidget> {
     _lightness = oklch.lightness;
     _chroma = oklch.chroma;
     _hue = oklch.hue;
+    _alpha = oklch.alpha;
   }
 
   void _updateChannel({

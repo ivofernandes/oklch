@@ -141,9 +141,11 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
   static Color startColor = Colors.blue;
   Color _selectedColor = startColor;
   TextEditingController rgbController = TextEditingController();
+  TextEditingController rgbaController = TextEditingController();
   TextEditingController oklchController = TextEditingController();
   TextEditingController hexController = TextEditingController();
 
+  double _alpha = startColor.a;
   OKLCHColor _oKLCHColor = OKLCHColor.fromColor(startColor);
 
   @override
@@ -157,9 +159,12 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
     final r = (color.r * 255).round();
     final g = (color.g * 255).round();
     final b = (color.b * 255).round();
+    final a = color.a;
     rgbController.text = 'RGB($r, $g, $b)';
+    rgbaController.text = 'RGBA($r, $g, $b, ${a.toStringAsFixed(2)})';
     oklchController.text = _oKLCHColor.toString();
-    hexController.text = _oKLCHColor.rgbHex;
+    final alphaHex = (a * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
+    hexController.text = '#${_oKLCHColor.rgbHex.replaceFirst('#', '')}$alphaHex';
   }
 
   String _generateOKLCHUrl() {
@@ -213,10 +218,52 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
                         color: _selectedColor,
                         onColorChanged: (color) {
                           setState(() {
-                            _selectedColor = color;
-                            _updateColorControllers(color);
+                            _selectedColor = color.withValues(alpha: _alpha);
+                            _updateColorControllers(_selectedColor);
                           });
                         },
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+                  Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Opacity',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Slider(
+                            value: _alpha,
+                            min: 0,
+                            max: 1,
+                            divisions: 100,
+                            label: _alpha.toStringAsFixed(2),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _alpha = newValue;
+                                _selectedColor =
+                                    _selectedColor.withValues(alpha: _alpha);
+                                _updateColorControllers(_selectedColor);
+                              });
+                            },
+                          ),
+                          Text(
+                            'Alpha: ${(_alpha * 100).toStringAsFixed(0)}%',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -243,6 +290,14 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
                             value: rgbController.text,
                             onCopy: () => Clipboard.setData(
                               ClipboardData(text: rgbController.text),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _ValueRow(
+                            label: 'RGBA',
+                            value: rgbaController.text,
+                            onCopy: () => Clipboard.setData(
+                              ClipboardData(text: rgbaController.text),
                             ),
                           ),
                           const SizedBox(height: 8),

@@ -21,3 +21,8 @@ FEAT: add very good analysis
 
 Extensive testing and validation
 New color picker widget
+
+# 1.0.1
+
+alpha channel on the OKLCH
+
