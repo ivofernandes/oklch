@@ -163,8 +163,10 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
     rgbController.text = 'RGB($r, $g, $b)';
     rgbaController.text = 'RGBA($r, $g, $b, ${a.toStringAsFixed(2)})';
     oklchController.text = _oKLCHColor.toString();
-    final alphaHex = (a * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
-    hexController.text = '#${_oKLCHColor.rgbHex.replaceFirst('#', '')}$alphaHex';
+    final alphaHex =
+        (a * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
+    hexController.text =
+        '#${_oKLCHColor.rgbHex.replaceFirst('#', '')}$alphaHex';
   }
 
   String _generateOKLCHUrl() {
@@ -225,7 +227,6 @@ class _ColorPickerDemoState extends State<ColorPickerDemo> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 12),
                   Card(
                     elevation: 0,
