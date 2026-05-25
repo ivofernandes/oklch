@@ -87,6 +87,21 @@ class OKLCHColor {
     return OKLABColor(mixL, mixA, mixB).toOKLCH();
   }
 
+  /// Creates a copy of this [OKLCHColor] but with the given fields replaced
+  /// by the new values.
+  OKLCHColor copyWith({
+    double? lightness,
+    double? chroma,
+    double? hue,
+    double? alpha,
+  }) =>
+      OKLCHColor(
+        lightness ?? this.lightness,
+        chroma ?? this.chroma,
+        hue ?? this.hue,
+        alpha ?? this.alpha,
+      );
+
   /// Returns a new [OKLCHColor] that matches this color with the alpha channel
   /// replaced with the given `opacity` (which ranges from 0.0 to 1.0).
   OKLCHColor withOpacity(double a) => OKLCHColor(
