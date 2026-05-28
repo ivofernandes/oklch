@@ -6,6 +6,9 @@ set -euo pipefail
 # DEVICE_ID=E3592F85-F0DE-4C34-9C14-AC1CE128052C ./scripts/run_generate_screenshots.sh
 DEVICE_ID="${DEVICE_ID:-}"
 
+# Set AUTO_SELECT_FIRST_DEVICE=1 to use the first Flutter device instead of prompting.
+AUTO_SELECT_FIRST_DEVICE="${AUTO_SELECT_FIRST_DEVICE:-1}"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 pushd "${SCRIPT_DIR}/../example" >/dev/null
 flutter pub get
@@ -44,6 +47,13 @@ default_patrol_cli_version() {
   esac
 }
 
+# Select the first Flutter device id (helper function, not used by default)
+select_first_flutter_device_id() {
+  flutter --no-version-check --suppress-analytics devices --machine \
+    | sed -nE 's/.*"id"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' \
+    | head -n 1
+}
+
 if [[ -d ios ]]; then
   RUNNER_SCHEME_FILE="ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme"
   PATROL_PKG_VERSION="$(extract_patrol_pkg_version)"
@@ -73,6 +83,12 @@ fi
 
 PATROL_ARGS=(test --target=integration_test/screenshot_patrol_test_generated_test.dart --verbose)
 PATROL_ARGS+=(--dart-define "AUTO_TEST_PATROL_SCREENSHOT_DIR=${PWD}/${OUTPUT_DIR}")
+if [[ -z "${DEVICE_ID}" && "${AUTO_SELECT_FIRST_DEVICE}" == "1" ]]; then
+  DEVICE_ID="$(select_first_flutter_device_id)"
+  if [[ -n "${DEVICE_ID}" ]]; then
+    echo "Auto-selected first Flutter device: ${DEVICE_ID}"
+  fi
+fi
 if [[ -n "${DEVICE_ID}" ]]; then
   PATROL_ARGS+=(--device "${DEVICE_ID}")
 elif [[ ! -t 0 ]]; then

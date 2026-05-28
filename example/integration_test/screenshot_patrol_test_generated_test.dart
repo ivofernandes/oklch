@@ -1,24 +1,58 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
+
+// ignore: avoid_relative_lib_imports
 import '../lib/main.dart' as app;
 
-Future<void> takeAutoTestScreenshot(
-  PatrolIntegrationTester $,
-  String name,
-) async {
+void main() {
+  patrolTest(
+    'main navigation screenshots',
+    ($) async {
+      app.main();
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await closeOpenPanels($);
+
+      // Route: /
+      await tapText($, 'Switch to light mode');
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'theme');
+      await tapText($, 'Switch to dark mode');
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'theme');
+      await enterValue($, 'Lightness', '0.60', tapX: 226.800, tapY: 287.000);
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'slider_lightness');
+      await enterValue($, 'Chroma', '0.36', tapX: 226.800, tapY: 375.000);
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'slider_chroma');
+      await enterValue($, 'Hue', '216.00', tapX: 226.800, tapY: 463.000);
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'slider_hue');
+      await enterValue($, 'Opacity', '0.60', tapX: 226.000, tapY: 661.000);
+      await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+      await captureScreenshot($, 'slider_opacity');
+      // Viewport: Current screen
+      await captureScreenshot($, 'home_current_screen');
+
+      // Route: MaterialPageRoute<no-args,standard,stateful>
+      // Navigation path unavailable for MaterialPageRoute<no-args,standard,stateful>.
+      // Skip reason: Navigation path unavailable for route: MaterialPageRoute<no-args,standard,stateful>.
+    },
+  );
+}
+
+Future<void> captureScreenshot(PatrolIntegrationTester $, String name) async {
   final TestWidgetsFlutterBinding binding = $.tester.binding;
   final RenderView renderView = binding.renderViews.first;
   final ContainerLayer? layer = renderView.debugLayer;
   if (layer == null) {
-    throw StateError(
-      'AutoTest could not capture a screenshot before the first frame was painted.',
-    );
+    throw StateError('Screenshot capture started before the first frame was painted.');
   }
 
   final ui.Scene scene = layer.buildScene(ui.SceneBuilder());
@@ -29,25 +63,176 @@ Future<void> takeAutoTestScreenshot(
   );
   scene.dispose();
   try {
-    final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData == null) {
-      throw StateError('AutoTest screenshot capture returned no PNG bytes.');
+      throw StateError('Screenshot capture returned no PNG bytes.');
     }
     final Uint8List bytes = byteData.buffer.asUint8List();
     final Directory outputDir = await _patrolScreenshotDir();
-    final String safeName =
-        name.replaceAll(RegExp(r'[^a-zA-Z0-9_.-]'), '_');
-    await File('${outputDir.path}/$safeName.png')
-        .writeAsBytes(bytes, flush: true);
+    final String safeName = name.replaceAll(RegExp(r'[^a-zA-Z0-9_.-]'), '_');
+    final String numberedName = await _nextScreenshotName(safeName);
+    await File('${outputDir.path}/$numberedName.png').writeAsBytes(bytes, flush: true);
+    await _appendScreenshotManifest(numberedName, originalName: name);
   } finally {
     image.dispose();
   }
 }
 
+Future<void> closeOpenPanels(PatrolIntegrationTester $) async {
+  final Finder closeButtons = find.byIcon(Icons.close);
+  if (closeButtons.evaluate().isEmpty) return;
+  await $.tester.tap(closeButtons.first, warnIfMissed: false);
+  await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+}
+
+Future<Finder?> findPatrolTarget(String label) async {
+  final List<Finder> candidates = <Finder>[
+    find.byKey(ValueKey<String>(label)),
+    find.text(label),
+    find.bySemanticsLabel(label),
+    find.byTooltip(label),
+    find.widgetWithText(ElevatedButton, label),
+    find.widgetWithText(FilledButton, label),
+    find.widgetWithText(OutlinedButton, label),
+    find.widgetWithText(TextButton, label),
+    find.widgetWithText(ListTile, label),
+    find.widgetWithText(SwitchListTile, label),
+    find.widgetWithText(CheckboxListTile, label),
+    find.widgetWithText(RadioListTile, label),
+    find.widgetWithText(ActionChip, label),
+  ];
+  for (final Finder candidate in candidates) {
+    if (candidate.evaluate().isNotEmpty) return candidate.first;
+  }
+  return null;
+}
+
+Future<void> tapText(PatrolIntegrationTester $, String text) async {
+  Finder? target = await findPatrolTarget(text);
+  for (int attempt = 0; target == null && attempt < 12; attempt++) {
+    final Finder scrollables = find.byType(Scrollable);
+    if (scrollables.evaluate().isEmpty) break;
+    await $.tester.drag(scrollables.last, const Offset(0, -320));
+    await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+    target = await findPatrolTarget(text);
+  }
+  if (target == null) {
+    throw TestFailure('Could not find UI target: $text');
+  }
+  await $.tester.ensureVisible(target);
+  await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+  await $.tester.tap(target, warnIfMissed: false);
+}
+
+Future<void> enterValue(PatrolIntegrationTester $, String label, String value, {double? tapX, double? tapY}) async {
+  final Finder editableTarget = findEditableTarget(label);
+  if (editableTarget.evaluate().isNotEmpty) {
+    await $.tester.ensureVisible(editableTarget.first);
+    await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+    await $.enterText(editableTarget.first, value);
+    return;
+  }
+
+  final Finder? sliderTarget = findSliderTarget(label);
+  if (sliderTarget != null) {
+    await setSliderValue($, sliderTarget, value);
+    return;
+  }
+
+  if (tapX != null && tapY != null) {
+    await $.tester.tapAt(Offset(tapX, tapY));
+    await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+    return;
+  }
+
+  throw TestFailure('Could not find editable field or slider for: $label');
+}
+
+Finder findEditableTarget(String label) {
+  final List<Finder> candidates = <Finder>[
+    find.widgetWithText(TextField, label),
+    find.widgetWithText(TextFormField, label),
+    find.byType(TextField),
+    find.byType(TextFormField),
+  ];
+  for (final Finder candidate in candidates) {
+    if (candidate.evaluate().isNotEmpty) return candidate.first;
+  }
+  return find.byType(TextField);
+}
+
+Finder? findSliderTarget(String label) {
+  final Finder labels = find.text(label);
+  for (final Element labelElement in labels.evaluate()) {
+    Element? current = labelElement;
+    while (current != null) {
+      final Finder sliders = find.descendant(
+        of: find.byWidget(current.widget),
+        matching: find.byType(Slider),
+      );
+      if (sliders.evaluate().isNotEmpty) return sliders.first;
+      Element? parent;
+      current.visitAncestorElements((Element ancestor) {
+        parent = ancestor;
+        return false;
+      });
+      current = parent;
+    }
+  }
+  final Finder sliders = find.byType(Slider);
+  final int sliderCount = sliders.evaluate().length;
+  if (sliderCount == 1) return sliders.first;
+  if (sliderCount > 1 && isGenericSliderLabel(label)) {
+    final int index = _sliderReplaySequence < sliderCount ? _sliderReplaySequence : sliderCount - 1;
+    _sliderReplaySequence += 1;
+    return sliders.at(index);
+  }
+  return null;
+}
+
+bool isGenericSliderLabel(String label) {
+  final String value = label.trim();
+  if (value == 'slider') return true;
+  return double.tryParse(value) != null;
+}
+
+Future<void> setSliderValue(PatrolIntegrationTester $, Finder target, String value) async {
+  final double? numericValue = double.tryParse(value);
+  if (numericValue == null) {
+    throw TestFailure('Slider value is not numeric: $value');
+  }
+  await $.tester.ensureVisible(target);
+  await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+  final Slider slider = $.tester.widget<Slider>(target);
+  final double range = slider.max - slider.min;
+  final double fraction = range == 0 ? 0 : ((numericValue - slider.min) / range).clamp(0.0, 1.0);
+  final Offset topLeft = $.tester.getTopLeft(target);
+  final Size size = $.tester.getSize(target);
+  final Offset tapPoint = Offset(
+    topLeft.dx + (size.width * fraction),
+    topLeft.dy + (size.height / 2),
+  );
+  await $.tester.tapAt(tapPoint);
+  await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
+}
+
+Future<String> _nextScreenshotName(String safeName) async {
+  final int count = (_screenshotNameCounts[safeName] ?? 0) + 1;
+  _screenshotNameCounts[safeName] = count;
+  return '${safeName}_$count';
+}
+
+Future<void> _appendScreenshotManifest(String fileName, {required String originalName}) async {
+  final Directory outputDir = await _patrolScreenshotDir();
+  final File manifest = File('${outputDir.path}/manifest.txt');
+  await manifest.writeAsString('$fileName.png => $originalName\n', mode: FileMode.append, flush: true);
+}
+
+final Map<String, int> _screenshotNameCounts = <String, int>{};
+int _sliderReplaySequence = 0;
+
 Future<Directory> _patrolScreenshotDir() async {
-  const String explicitDir =
-      String.fromEnvironment('AUTO_TEST_PATROL_SCREENSHOT_DIR');
+  const String explicitDir = String.fromEnvironment('PATROL_SCREENSHOT_DIR');
   if (explicitDir.isNotEmpty) {
     try {
       final Directory dir = Directory(explicitDir);
@@ -59,30 +244,8 @@ Future<Directory> _patrolScreenshotDir() async {
     }
   }
   final Directory dir = Directory(
-    '${Directory.systemTemp.path}/auto_test_patrol_screenshots',
+    '${Directory.systemTemp.path}/patrol_screenshots',
   );
   await dir.create(recursive: true);
   return dir;
-}
-
-void main() {
-  patrolTest('launch app and capture first screenshot', ($) async {
-    $.log('AutoTest: launching app');
-    await Future<void>.sync(app.main).timeout(const Duration(seconds: 5));
-
-    $.log('AutoTest: pumping initial frames');
-    for (int attempt = 0; attempt < 20; attempt++) {
-      await $.pump(const Duration(milliseconds: 100));
-      final TestWidgetsFlutterBinding binding = $.tester.binding;
-      if (binding.renderViews.isNotEmpty &&
-          binding.renderViews.first.debugLayer != null) {
-        break;
-      }
-    }
-
-    $.log('AutoTest: capturing screenshot');
-    await takeAutoTestScreenshot($, 'app_launch')
-        .timeout(const Duration(seconds: 10));
-    $.log('AutoTest: screenshot captured');
-  });
 }
