@@ -1,0 +1,14 @@
+name: oklch_dart
+description: Dart-only implementation of OKLCH color space
+version: 1.0.1
+homepage: https://incaview.com
+repository: https://github.com/ivofernandes/oklch
+
+environment:
+  sdk: ">=3.2.1 <4.0.0"
+
+resolution: workspace
+
+dev_dependencies:
+  test: ^1.33.0
+  very_good_analysis: ^6.0.0

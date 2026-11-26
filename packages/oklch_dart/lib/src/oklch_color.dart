@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oklch/src/oklab_color.dart';
+import 'package:oklch_dart/src/oklab_color.dart';
 
 /// The OKLCHColor class represents colors in the OKLCH color space.
 /// OKLCH is a perceptually uniform color space, which can be useful for

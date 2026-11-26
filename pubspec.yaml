@@ -7,3 +7,4 @@ environment:
 
 workspace:
   - packages/oklch
+  - packages/oklch_dart

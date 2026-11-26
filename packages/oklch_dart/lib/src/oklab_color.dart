@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:oklch/src/color_extensions.dart';
-import 'package:oklch/src/oklch_color.dart';
+import 'package:oklch_dart/src/color_extensions.dart';
+import 'package:oklch_dart/src/oklch_color.dart';
 
 const _kHueEpsilon = 1e-7;
 
