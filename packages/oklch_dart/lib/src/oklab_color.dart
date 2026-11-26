@@ -1,10 +1,27 @@
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:oklch_dart/src/color_extensions.dart';
+import 'package:oklch_dart/src/color_data.dart';
 import 'package:oklch_dart/src/oklch_color.dart';
 
 const _kHueEpsilon = 1e-7;
+
+class LMSColor {
+  final double l;
+  final double m;
+  final double s;
+  final double alpha;
+
+  LMSColor(this.l, this.m, this.s, [this.alpha = 1]);
+
+  LMSColor.fromLinearRGB(
+    double r,
+    double g,
+    double b, [
+    this.alpha = 1,
+  ])  : l = _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b),
+        m = _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b),
+        s = _cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+}
 
 /// The OKLABColor class represents colors in the OKLAB color space.
 class OKLABColor {
@@ -16,37 +33,44 @@ class OKLABColor {
     this.alpha = 1,
   ]);
 
-  factory OKLABColor._fromLinearRGB(
+  /// Convert LMS to Oklab
+  OKLABColor.fromLMS(LMSColor lms)
+      : this(
+          0.2104542553 * lms.l + 0.7936177850 * lms.m - 0.0040720468 * lms.s,
+          1.9779984951 * lms.l - 2.4285922050 * lms.m + 0.4505937099 * lms.s,
+          0.0259040371 * lms.l + 0.7827717662 * lms.m - 0.8086757660 * lms.s,
+          lms.alpha,
+        );
+
+  OKLABColor._fromLinearRGBData(
+    LinearColorData linear,
+  ) : this._fromLinearRGB(
+          linear.r,
+          linear.g,
+          linear.b,
+          linear.a,
+        );
+
+  OKLABColor._fromLinearRGB(
     double r,
     double g,
     double b, [
     double alpha = 1,
-  ]) {
-    // Convert linear RGB to LMS
-    final l = _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
-    final m = _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
-    final s = _cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
-
-    // Convert LMS to Oklab
-    final lCube = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
-    final aCube = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
-    final bCube = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
-
-    return OKLABColor(lCube, aCube, bCube, alpha);
-  }
+  ]) : this.fromLMS(LMSColor.fromLinearRGB(r, g, b, alpha));
 
   /// Factory constructor to create an OKLABColor instance from given color.
-  factory OKLABColor.fromColor(Color color) {
-    final (r, g, b) = color.toLinearRGB();
-    return OKLABColor._fromLinearRGB(r, g, b, color.a);
-  }
+  OKLABColor.fromColorData(
+    ColorData color,
+  ) : this._fromLinearRGBData(color.toLinearRGB());
 
   /// Factory constructor to create an OKLABColor instance from given OKLCHColor.
-  factory OKLABColor.fromOKLCH(OKLCHColor color) {
-    final a = cos(color.hue * pi / 180) * color.chroma;
-    final b = sin(color.hue * pi / 180) * color.chroma;
-    return OKLABColor(color.lightness, a, b, color.alpha);
-  }
+  OKLABColor.fromOKLCH(OKLCHColor color)
+      : this(
+          color.lightness,
+          cos(color.hue * pi / 180) * color.chroma,
+          sin(color.hue * pi / 180) * color.chroma,
+          color.alpha,
+        );
 
   /// Lightness component of the OKLAB color model.
   final double lightness;
@@ -86,10 +110,10 @@ class OKLABColor {
     return OKLCHColor(lightness, chroma, hue, alpha);
   }
 
-  /// [OKLABColor] to [Color]
-  Color toColor() {
+  /// [OKLABColor] to [ColorData]
+  ColorData toColorData() {
     final (r, g, b) = _oklabToLinearRgb();
-    return Color.fromRGBO(
+    return ColorData(
       _gammaCorrect(r.clamp(0, 1)),
       _gammaCorrect(g.clamp(0, 1)),
       _gammaCorrect(b.clamp(0, 1)),
@@ -124,13 +148,14 @@ class OKLABColor {
     return (r, g, b_);
   }
 
-  int _gammaCorrect(double c) {
+  double _gammaCorrect(double c) {
     if (c <= 0.0031308) {
-      return (12.92 * c * 255).round();
+      return 12.92 * c;
     } else {
-      return ((1.055 * pow(c, 1 / 2.4).toDouble() - 0.055) * 255).round();
+      return 1.055 * pow(c, 1 / 2.4).toDouble() - 0.055;
     }
   }
-
-  static double _cbrt(double x) => pow(x, 1 / 3).toDouble();
 }
+
+/// Computes the cubic root of a given number [x].
+double _cbrt(double x) => pow(x, 1 / 3).toDouble();

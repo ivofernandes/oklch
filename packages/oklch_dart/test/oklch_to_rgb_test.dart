@@ -1,7 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter_test/flutter_test.dart';
-import 'package:oklch/oklch.dart';
+import 'package:oklch_dart/oklch_dart.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('OKLCHColor tests based on website', () {
@@ -305,8 +303,8 @@ void main() {
 
     test('round-trip OKLCH -> RGB -> OKLCH', () {
       final OKLCHColor input = OKLCHColor.fromOKLCH(0, 0, 0, 0.5);
-      final Color intermediate = input.toColor();
-      final OKLCHColor output = OKLCHColor.fromColor(intermediate);
+      final ColorData intermediate = input.toColorData();
+      final OKLCHColor output = OKLCHColor.fromColorData(intermediate);
 
       expect(output.lightness, equals(input.lightness));
       expect(output.chroma, equals(input.chroma));

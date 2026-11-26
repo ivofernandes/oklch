@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:oklch_dart/oklch_dart.dart';
+import 'package:oklch/src/color_extensions.dart';
 
 /// Various OKLCHColor extensions
 extension OKLCHColorExtensions on Color {

@@ -51,11 +51,11 @@ void main() {
     test('toLinearRGB uses gamma correction', () {
       const color = Color(0xFFFFFFFF);
 
-      final (r, g, b) = color.toLinearRGB();
+      final linear = color.toColorData().toLinearRGB();
 
-      expect(r, closeTo(1, 1e-6));
-      expect(g, closeTo(1, 1e-6));
-      expect(b, closeTo(1, 1e-6));
+      expect(linear.r, closeTo(1, 1e-6));
+      expect(linear.g, closeTo(1, 1e-6));
+      expect(linear.b, closeTo(1, 1e-6));
     });
   });
 
