@@ -26,3 +26,6 @@ New color picker widget
 
 alpha channel on the OKLCH
 
+# 1.1.0
+
+- Split `oklch` package into `oklch` (Flutter, backwards-compatible) and `oklch_dart` (Dart only)
