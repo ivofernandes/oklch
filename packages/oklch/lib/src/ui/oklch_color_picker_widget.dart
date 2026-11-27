@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oklch/src/oklch_color.dart';
+import 'package:oklch/src/color_extensions.dart';
 import 'package:oklch/src/ui/gradient_rect_slider_track_shape.dart';
 
 /// OKLCHColorPickerWidget provides a widget for

@@ -1,19 +1,11 @@
-name: oklch
-description: OKLCH is a new way to encode colors (like hex, RGBA, or HSL)
-version: 1.0.1
-homepage: https://incaview.com
-repository: https://github.com/ivofernandes/oklch
-
+name: oklch_workspace
+description: Pub workspace root for the oklch monorepo (pure-Dart core + Flutter wrapper).
+publish_to: none
 
 environment:
-  sdk: '>=3.2.1 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: ">=3.6.0 <4.0.0"
 
-dependencies:
-  flutter:
-    sdk: flutter
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  very_good_analysis: ^6.0.0
+workspace:
+  - packages/oklch
+  - packages/oklch_dart
+  - packages/oklch/example

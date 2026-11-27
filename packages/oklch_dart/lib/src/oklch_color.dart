@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:oklch/src/oklab_color.dart';
+import 'package:oklch_dart/src/color_data.dart';
+import 'package:oklch_dart/src/oklab_color.dart';
 
 /// The OKLCHColor class represents colors in the OKLCH color space.
 /// OKLCH is a perceptually uniform color space, which can be useful for
@@ -15,18 +15,23 @@ class OKLCHColor {
 
   /// Factory constructor that creates an OKLCHColor instance from a Flutter Color object.
   /// Converts RGB values to OKLCH.
-  factory OKLCHColor.fromColor(Color color) =>
-      OKLABColor.fromColor(color).toOKLCH().withOpacity(color.a);
+  OKLCHColor.fromColorData(ColorData color)
+      : this._fromOKLCH(
+            OKLABColor.fromColorData(color).toOKLCH().withOpacity(color.a));
 
   /// Factory constructor to create an OKLCHColor instance from given OKLCH values.
   /// Optionally, an alpha value can be specified.
-  factory OKLCHColor.fromOKLCH(
+  OKLCHColor.fromOKLCH(
     double l,
     double c,
     double h, [
     double alpha = 1.0,
-  ]) =>
-      OKLCHColor(l, c, h, alpha);
+  ]) : this(l, c, h, alpha);
+
+  OKLCHColor._fromOKLCH(OKLCHColor color)
+      : this(color.lightness, color.chroma, color.hue, color.alpha);
+
+  factory OKLCHColor.fromOKLAB(OKLABColor color) => color.toOKLCH();
 
   /// Lightness component of the OKLCH color model.
   final double lightness;
@@ -51,12 +56,12 @@ class OKLCHColor {
   /// OKLCH Black
   static const OKLCHColor white = OKLCHColor(1, 0, 0);
 
-  /// [OKLCHColor] to [Color]
-  Color toColor() => OKLABColor.fromOKLCH(this).toColor();
+  /// [OKLCHColor] to [ColorData]
+  ColorData toColorData() => OKLABColor.fromOKLCH(this).toColorData();
 
   /// Provides a hexadecimal representation of the OKLCH color in the RGB color space.
   String get rgbHex {
-    final c = toColor();
+    final c = toColorData();
     final rHex = _channelToInt(c.r).toRadixString(16).padLeft(2, '0');
     final gHex = _channelToInt(c.g).toRadixString(16).padLeft(2, '0');
     final bHex = _channelToInt(c.b).toRadixString(16).padLeft(2, '0');
