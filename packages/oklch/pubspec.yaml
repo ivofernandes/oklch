@@ -13,7 +13,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  oklch_dart:
+  oklch_dart: ^1.1.0
 
 dev_dependencies:
   flutter_test:

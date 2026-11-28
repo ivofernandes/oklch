@@ -52,7 +52,8 @@ Future<void> captureScreenshot(PatrolIntegrationTester $, String name) async {
   final RenderView renderView = binding.renderViews.first;
   final ContainerLayer? layer = renderView.debugLayer;
   if (layer == null) {
-    throw StateError('Screenshot capture started before the first frame was painted.');
+    throw StateError(
+        'Screenshot capture started before the first frame was painted.');
   }
 
   final ui.Scene scene = layer.buildScene(ui.SceneBuilder());
@@ -63,7 +64,8 @@ Future<void> captureScreenshot(PatrolIntegrationTester $, String name) async {
   );
   scene.dispose();
   try {
-    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData == null) {
       throw StateError('Screenshot capture returned no PNG bytes.');
     }
@@ -71,7 +73,8 @@ Future<void> captureScreenshot(PatrolIntegrationTester $, String name) async {
     final Directory outputDir = await _patrolScreenshotDir();
     final String safeName = name.replaceAll(RegExp(r'[^a-zA-Z0-9_.-]'), '_');
     final String numberedName = await _nextScreenshotName(safeName);
-    await File('${outputDir.path}/$numberedName.png').writeAsBytes(bytes, flush: true);
+    await File('${outputDir.path}/$numberedName.png')
+        .writeAsBytes(bytes, flush: true);
     await _appendScreenshotManifest(numberedName, originalName: name);
   } finally {
     image.dispose();
@@ -124,7 +127,8 @@ Future<void> tapText(PatrolIntegrationTester $, String text) async {
   await $.tester.tap(target, warnIfMissed: false);
 }
 
-Future<void> enterValue(PatrolIntegrationTester $, String label, String value, {double? tapX, double? tapY}) async {
+Future<void> enterValue(PatrolIntegrationTester $, String label, String value,
+    {double? tapX, double? tapY}) async {
   final Finder editableTarget = findEditableTarget(label);
   if (editableTarget.evaluate().isNotEmpty) {
     await $.tester.ensureVisible(editableTarget.first);
@@ -183,7 +187,9 @@ Finder? findSliderTarget(String label) {
   final int sliderCount = sliders.evaluate().length;
   if (sliderCount == 1) return sliders.first;
   if (sliderCount > 1 && isGenericSliderLabel(label)) {
-    final int index = _sliderReplaySequence < sliderCount ? _sliderReplaySequence : sliderCount - 1;
+    final int index = _sliderReplaySequence < sliderCount
+        ? _sliderReplaySequence
+        : sliderCount - 1;
     _sliderReplaySequence += 1;
     return sliders.at(index);
   }
@@ -196,7 +202,8 @@ bool isGenericSliderLabel(String label) {
   return double.tryParse(value) != null;
 }
 
-Future<void> setSliderValue(PatrolIntegrationTester $, Finder target, String value) async {
+Future<void> setSliderValue(
+    PatrolIntegrationTester $, Finder target, String value) async {
   final double? numericValue = double.tryParse(value);
   if (numericValue == null) {
     throw TestFailure('Slider value is not numeric: $value');
@@ -205,7 +212,8 @@ Future<void> setSliderValue(PatrolIntegrationTester $, Finder target, String val
   await $.pumpAndTrySettle(timeout: const Duration(seconds: 2));
   final Slider slider = $.tester.widget<Slider>(target);
   final double range = slider.max - slider.min;
-  final double fraction = range == 0 ? 0 : ((numericValue - slider.min) / range).clamp(0.0, 1.0);
+  final double fraction =
+      range == 0 ? 0 : ((numericValue - slider.min) / range).clamp(0.0, 1.0);
   final Offset topLeft = $.tester.getTopLeft(target);
   final Size size = $.tester.getSize(target);
   final Offset tapPoint = Offset(
@@ -222,10 +230,12 @@ Future<String> _nextScreenshotName(String safeName) async {
   return '${safeName}_$count';
 }
 
-Future<void> _appendScreenshotManifest(String fileName, {required String originalName}) async {
+Future<void> _appendScreenshotManifest(String fileName,
+    {required String originalName}) async {
   final Directory outputDir = await _patrolScreenshotDir();
   final File manifest = File('${outputDir.path}/manifest.txt');
-  await manifest.writeAsString('$fileName.png => $originalName\n', mode: FileMode.append, flush: true);
+  await manifest.writeAsString('$fileName.png => $originalName\n',
+      mode: FileMode.append, flush: true);
 }
 
 final Map<String, int> _screenshotNameCounts = <String, int>{};
